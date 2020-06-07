@@ -27,6 +27,8 @@
 ** Dependencies
    The only no emacs related dependence in this configuration is the
    IBM Plex Mono font. Install it from your distribution packages.
+   You can change it before opening Emacs with this configuration for
+   the first time.
 * melpa crap, and basic packages installation
   melpa, where you get the packages. This also installs use-package,
   and other packages I use.
@@ -52,6 +54,7 @@
    Remember to run M-x all-the-icons-install-fonts after the first
    init to install the fonts. 
    #+BEGIN_SRC emacs-lisp
+
    (use-package markdown-mode
    :ensure t)
    (use-package web-mode
@@ -60,6 +63,9 @@
    :ensure t)
    (use-package all-the-icons
    :ensure t)
+   (use-package which-key
+   :ensure t
+   :init (which-key-mode))
    #+END_SRC
 * Autoindentation
   C-c n for indent-buffer. I don't use the rest.
@@ -115,7 +121,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 * customization
   Emacs customization, Here is where most of the configuration is.
-** Disable bars font and pandoc export options.
+** Disable bars font and pandoc export optxions.
    Basic customization. I also use smex instead of default M-x. I
    don't like heml
    #+BEGIN_SRC emacs-lisp
@@ -123,7 +129,7 @@ Including indent-buffer, which should not be called automatically on save."
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
-  (set-frame-font "IBM Plex Mono 14" nil t)
+  (set-frame-font "IBM Plex Mono 13" nil t)
     (load-file "~/.emacs.d/markup.el")
     (use-package smex
     :ensure t
@@ -172,12 +178,15 @@ Including indent-buffer, which should not be called automatically on save."
    :background (face-background 'default))
    #+END_SRC
 ** org-mode
+   org-mode is a markup language which has a lot of stuff (This config
+   file is written in org-mode.
    #+BEGIN_SRC emacs-lisp
-   (use-package org-bullets
-   :ensure t 
-   :init
-   (add-hook 'org-mode-hook 'org-bullets-mode))
-   (setq org-hide-emphasis-markers t)
+     (use-package org-bullets
+     :ensure t 
+     :init
+     (add-hook 'org-mode-hook 'org-bullets-mode))
+     (setq org-hide-emphasis-markers t)
+     (setq org-src-window-setup 'current-window)
    #+END_SRC
 
 ** Relative lines
@@ -204,10 +213,10 @@ Including indent-buffer, which should not be called automatically on save."
    #+END_SRC
 ** theme
    #+BEGIN_SRC emacs-lisp
-   (use-package zerodark-theme
+   (use-package humanoid-themes
    :ensure t
    :config
-   (load-theme 'zerodark t))
+   (load-theme 'humanoid-dark t))
    #+END_SRC
 
 ** erc

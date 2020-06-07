@@ -1,0 +1,262 @@
+#+AUTHOR: qorg11
+#+TITLE: emacs config
+#+OPTIONS: toc:nil
+
+* qorg's Emacs config
+
+  This is my Emacs configuration. Hope you like it.
+
+** Installation
+
+   Just copy this repository to your .emacs.d. Nothing else is needed.
+
+** Why?
+   * I can
+   * I don't like doom emacs
+   * I don't like spacemacs
+   * I don't want to learn doom emacs
+   * I don't want to learn spacemacs
+
+** About me
+   Here I set variables about personal information i'll use later in
+   this config.
+   #+BEGIN_SRC emacs-lisp
+   (setq name "qorg11")
+   (setq email "qorg@vxempire.xyz")
+   #+END_SRC
+* melpa crap
+  melpa, where you get the packages. This also installs use-package
+  #+BEGIN_SRC emacs-lisp
+(require 'package)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+(package-initialize)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+  #+END_SRC
+
+* Autoindentation
+  C-c n for indent-buffer. I don't use the rest.
+  #+BEGIN_SRC emacs-lisp
+
+(defun untabify-buffer ()
+  (interactive)
+  (untabify (point-min) (point-max)))
+
+(defun indent-buffer ()
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
+(defun cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer.
+Including indent-buffer, which should not be called automatically on save."
+  (interactive)
+  (untabify-buffer)
+  (delete-trailing-whitespace)
+  (indent-buffer))
+  #+END_SRC
+
+* Shorcuts
+
+  #+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c n") 'cleanup-buffer)
+(global-set-key (kbd "M-m") 'mark-whole-buffer)
+  #+END_SRC
+
+* No idea
+  #+BEGIN_SRC emacs-lisp
+  (setq package-enable-at-startup nil) (package-initialize)
+
+  (setq make-backup-files nil) ; stop creating backup~ files
+  (setq auto-save-default nil) ; stop creating #autosave# files
+  (put 'upcase-region 'disabled nil)
+
+
+  (defun contextual-menubar (&optional frame)
+  "Display the menubar in FRAME (default: selected frame) if on a
+  graphical display, but hide it if in terminal."
+  (interactive)
+  (set-frame-parameter frame 'menu-bar-lines
+  (if (display-graphic-p frame)
+  1 0)))
+
+  (add-hook 'after-make-frame-functions 'contextual-menubar)
+  (add-hook 'sgml-mode-hook 'zencoding-mode)
+  (setq-default dired-details-hidden-string "---- ")
+  
+  ;; (icomplete-mode 1) Deprecated, used ido-mode instead
+  #+END_SRC
+
+* customization
+  Emacs customization, Here is where most of the configuration is.
+** Disable bars font and pandoc export options.
+   Basic customization. I also use smex instead of default M-x. I
+   don't like heml
+   #+BEGIN_SRC emacs-lisp
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (set-frame-font "IBM Plex Mono 14" nil t)
+    (load-file "~/.emacs.d/markup.el")
+      (global-set-key (kbd "M-x") 'smex)
+
+
+    (setq-default major-mode 'text-mode)
+   #+END_SRC
+*** Space to - (Like normal M-x)
+    #+BEGIN_SRC emacs-lisp
+
+  (defadvice smex (around space-inserts-hyphen activate compile)
+
+  (let ((ido-cannot-complete-command
+  `(lambda ()
+  (interactive)
+  (if (string= " " (this-command-keys))
+  (insert ?-)
+  (funcall ,ido-cannot-complete-command)))))
+  ad-do-it))
+    #+END_SRC
+
+** Highlight matching parentheses
+   #+BEGIN_SRC emacs-lisp
+  (show-paren-mode 1)
+   (setq show-paren-style 'mixed)
+
+   (setq startup/gc-cons-threshold gc-cons-threshold)
+   (setq gc-cons-threshold most-positive-fixnum)
+   (defun startup/reset-gc () (setq gc-cons-threshold startup/gc-cons-threshold))
+   (add-hook 'emacs-startup-hook 'startup/reset-gc)
+   #+END_SRC
+** Open pdf using zathura
+   I don't know how necessary this is. But I use it when working with
+   pandoc and that kind of crap.
+   #+BEGIN_SRC emacs-lisp
+(defun open-pdf()
+   (interactive)
+   (setq file (buffer-substring (mark) (point)))
+   (shell-command (concat "zathura " file "&")
+   ))
+   ;; Borders
+   (set-face-attribute 'fringe nil
+   :foreground (face-foreground 'default)
+   :background (face-background 'default))
+   #+END_SRC
+** org-mode
+   #+BEGIN_SRC emacs-lisp
+   (add-hook 'org-mode-hook 'org-bullets-mode)
+   (setq org-hide-emphasis-markers t)
+   #+END_SRC
+
+** Relative lines
+   #+BEGIN_SRC emacs-lisp
+  (use-package linum-relative
+  :ensure t
+  :init
+  (setq-default display-line-numbers-type 'relative
+  display-line-numbers-current-relative t
+  display-line-numbers-width 1
+  display-line-numbers-widen t)
+
+  (add-hook 'text-mode-hook #'display-line-numbers-mode)
+  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+  (column-number-mode 1))
+   #+END_SRC
+** Flycheck
+   Flycheck is a syntax validator or somehting like that
+   #+BEGIN_SRC emacs-lisp
+   (use-package flycheck
+   :ensure t
+   :init
+   (add-hook 'after-init-hook #'global-flycheck-mode))
+   #+END_SRC
+** theme
+   #+BEGIN_SRC emacs-lisp
+   (use-package zerodark-theme
+   :ensure t
+   :config
+   (load-theme 'zerodark t))
+   #+END_SRC
+
+** erc
+   Emacs Irc Client, better than irssi and weechat.
+   #+BEGIN_SRC emacs-lisp
+  (setq erc-nick name)
+   #+END_SRC
+** AucTeX
+   This basically opens zathura when compiling with auctex (C-c C-a)
+   #+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'tex
+  (setq TeX-source-correlate-method 'synctex)
+  (TeX-source-correlate-mode)
+  (setq TeX-source-correlate-start-server t)
+
+  (add-to-list 'TeX-view-program-selection
+               '(output-pdf "Zathura")))
+   #+END_SRC
+** Shell
+   #+BEGIN_SRC emacs-lisp
+   (setq shell "/bin/bash")
+   (defadvice ansi-term (before force-bsah)
+  (interactive (list shell)))
+  (ad-activate 'ansi-term)
+
+   #+END_SRC
+* ido
+  Ido is a replacement for keybindings such as C-x C-f and C-x b. Here
+  I rebinded C-x C-b to ido-switch-buffer because I always press C-x
+  C-b instead of C-x b
+  #+BEGIN_SRC emacs-lisp
+  (use-package ido-vertical-mode
+   :ensure t
+   :init
+  (setq ido-enable-flex-matching nil)
+  (setq ido-create-new-buffer 'always)
+  (setq ido-everywhere t)
+  (ido-mode 1)
+  (ido-vertical-mode 1)
+  (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+  (global-set-key (kbd "C-x C-b") 'ido-switch-buffer))
+
+
+  #+END_SRC
+
+* Dashboard
+  Dashboard. You can change
+  ~/.emacs.d/elpa/dashboard-20200306.1344/banners/logo.png to use your
+  own logo instead of Lain.
+  #+BEGIN_SRC emacs-lisp
+  (use-package dashboard
+  :ensure t
+  :init
+  (dashboard-setup-startup-hook)
+  (setq dashboard-items '((recents  . 5)
+  (bookmarks . 5)))
+  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-banner-logo-title "Welcome to Editor MACroS")
+
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t))
+  #+END_SRC
+* Powerline
+  Powerline, because emacs default bar sucks
+  #+BEGIN_SRC emacs-lisp
+
+(use-package powerline
+:ensure t
+:init
+(powerline-default-theme)
+
+    (set-face-background 'mode-line
+    "#080c0d")
+    (set-face-foreground 'mode-line
+    "#cad5d8"))
+  #+END_SRC

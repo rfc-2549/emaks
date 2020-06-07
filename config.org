@@ -24,6 +24,9 @@
    (setq name "qorg11")
    (setq email "qorg@vxempire.xyz")
    #+END_SRC
+** Dependencies
+   The only no emacs related dependence in this configuration is the
+   IBM Plex Mono font. Install it from your distribution packages.
 * melpa crap
   melpa, where you get the packages. This also installs use-package
   #+BEGIN_SRC emacs-lisp
@@ -102,12 +105,16 @@ Including indent-buffer, which should not be called automatically on save."
    Basic customization. I also use smex instead of default M-x. I
    don't like heml
    #+BEGIN_SRC emacs-lisp
+   
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (set-frame-font "IBM Plex Mono 14" nil t)
     (load-file "~/.emacs.d/markup.el")
-      (global-set-key (kbd "M-x") 'smex)
+    (use-package smex
+    :ensure t
+    :init
+   (global-set-key (kbd "M-x") 'smex))
 
 
     (setq-default major-mode 'text-mode)
@@ -152,7 +159,10 @@ Including indent-buffer, which should not be called automatically on save."
    #+END_SRC
 ** org-mode
    #+BEGIN_SRC emacs-lisp
-   (add-hook 'org-mode-hook 'org-bullets-mode)
+   (use-package org-bullets
+   :ensure t 
+   :init
+   (add-hook 'org-mode-hook 'org-bullets-mode))
    (setq org-hide-emphasis-markers t)
    #+END_SRC
 

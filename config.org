@@ -46,7 +46,16 @@
   (package-install 'use-package))
 
   #+END_SRC
-
+** Generic packages
+   Here I install some packages that don't need configuration.
+   #+BEGIN_SRC emacs-lisp
+   (use-package markdown-mode
+   :ensure t)
+   (use-package web-mode
+   :ensure t)
+   (use-package magit
+   :ensure t)
+   #+END_SRC
 * Autoindentation
   C-c n for indent-buffer. I don't use the rest.
   #+BEGIN_SRC emacs-lisp

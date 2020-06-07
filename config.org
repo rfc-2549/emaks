@@ -49,6 +49,8 @@
   #+END_SRC
 ** Generic packages
    Here I install some packages that don't need configuration.
+   Remember to run M-x all-the-icons-install-fonts after the first
+   init to install the fonts.
    #+BEGIN_SRC emacs-lisp
    (use-package markdown-mode
    :ensure t)
@@ -57,9 +59,7 @@
    (use-package magit
    :ensure t)
    (use-package all-the-fonts
-   :ensure t
-   :init
-   (all-the-icons-install-fonts))
+   :ensure t)
    #+END_SRC
 * Autoindentation
   C-c n for indent-buffer. I don't use the rest.

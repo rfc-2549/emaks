@@ -3,3 +3,4 @@ elpa
 config.el
 smex-items
 recentf
+transient

@@ -27,8 +27,9 @@
 ** Dependencies
    The only no emacs related dependence in this configuration is the
    IBM Plex Mono font. Install it from your distribution packages.
-* melpa crap
-  melpa, where you get the packages. This also installs use-package
+* melpa crap, and basic packages installation
+  melpa, where you get the packages. This also installs use-package,
+  and other packages I use.
   #+BEGIN_SRC emacs-lisp
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -55,6 +56,10 @@
    :ensure t)
    (use-package magit
    :ensure t)
+   (use-package all-the-fonts
+   :ensure t
+   :init
+   (all-the-icons-install-fonts))
    #+END_SRC
 * Autoindentation
   C-c n for indent-buffer. I don't use the rest.

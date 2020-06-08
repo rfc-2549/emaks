@@ -4,3 +4,4 @@ config.el
 smex-items
 recentf
 transient
+ido.last

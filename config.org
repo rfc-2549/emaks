@@ -23,6 +23,7 @@
    #+BEGIN_SRC emacs-lisp
    (setq name "qorg11")
    (setq email "qorg@vxempire.xyz")
+   (setq website "qorg11.net")
    #+END_SRC
 ** Dependencies
    The only no emacs related dependence in this configuration is the
@@ -217,12 +218,14 @@ Including indent-buffer, which should not be called automatically on save."
    :ensure t
    :config
    (load-theme 'humanoid-dark t))
+   (hl-line-mode)
    #+END_SRC
 
 ** erc
    Emacs Irc Client, better than irssi and weechat.
    #+BEGIN_SRC emacs-lisp
   (setq erc-nick name)
+  (setq erc-server website)
    #+END_SRC
 ** AucTeX
    This basically opens zathura when compiling with auctex (C-c C-a)

@@ -243,6 +243,14 @@ Including indent-buffer, which should not be called automatically on save."
   (ad-activate 'ansi-term)
 
    #+END_SRC
+** Swiper
+   #+BEGIN_SRC emacs-lisp
+   (use-package swiper
+   :ensure t
+   :init
+   (global-set-key "\C-s" 'swiper))
+   
+   #+END_SRC
 * ido
   Ido is a replacement for keybindings such as C-x C-f and C-x b. Here
   I rebinded C-x C-b to ido-switch-buffer because I always press C-x

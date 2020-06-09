@@ -3,7 +3,7 @@
 #+OPTIONS: toc:nil
 
 * qorg's Emacs config
-
+ 
   This is my Emacs configuration. Hope you like it.
 
 ** Installation
@@ -114,7 +114,10 @@ Including indent-buffer, which should not be called automatically on save."
   1 0)))
 
   (add-hook 'after-make-frame-functions 'contextual-menubar)
-  (add-hook 'sgml-mode-hook 'zencoding-mode)
+  (use-package zencoding-mode
+  :ensure t
+  :init
+  (add-hook 'sgml-mode-hook 'zencoding-mode))
   (setq-default dired-details-hidden-string "---- ")
   
   ;; (icomplete-mode 1) Deprecated, used ido-mode instead
@@ -213,12 +216,13 @@ Including indent-buffer, which should not be called automatically on save."
    (add-hook 'after-init-hook #'global-flycheck-mode))
    #+END_SRC
 ** theme
+   Emacs theme, among other things.
    #+BEGIN_SRC emacs-lisp
    (use-package humanoid-themes
    :ensure t
    :config
    (load-theme 'humanoid-dark t))
-   (hl-line-mode)
+   (global-hl-line-mode)
    #+END_SRC
 
 ** erc
@@ -303,4 +307,6 @@ Including indent-buffer, which should not be called automatically on save."
     "#080c0d")
     (set-face-foreground 'mode-line
     "#cad5d8"))
-  #+END_SRC
+  #+
+
+

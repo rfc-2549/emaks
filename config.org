@@ -3,7 +3,7 @@
 #+OPTIONS: toc:nil
 
 * qorg's Emacs config
- 
+
   This is my Emacs configuration. Hope you like it.
 
 ** Installation
@@ -30,6 +30,13 @@
    IBM Plex Mono font. Install it from your distribution packages.
    You can change it before opening Emacs with this configuration for
    the first time.
+   
+   For irony-mode (C autocompletion) irony-sever must be
+   installed. You can install it with M-x irony-install-server or via
+   distribution's packages, in Debian case, apt install irony-server.
+   Using M-x irony-install-server requires cmake and a lot of
+   dependences I'm to lazy to install.
+
 * melpa crap, and basic packages installation
   melpa, where you get the packages. This also installs use-package,
   and other packages I use.
@@ -53,7 +60,7 @@
 ** Generic packages
    Here I install some packages that don't need configuration.
    Remember to run M-x all-the-icons-install-fonts after the first
-   init to install the fonts. 
+   init to install the fonts.
    #+BEGIN_SRC emacs-lisp
 
    (use-package markdown-mode
@@ -125,7 +132,7 @@ Including indent-buffer, which should not be called automatically on save."
   :init
   (add-hook 'sgml-mode-hook 'zencoding-mode))
   (setq-default dired-details-hidden-string "---- ")
-  
+
   ;; (icomplete-mode 1) Deprecated, used ido-mode instead
   #+END_SRC
 
@@ -135,7 +142,7 @@ Including indent-buffer, which should not be called automatically on save."
    Basic customization. I also use smex instead of default M-x. I
    don't like heml
    #+BEGIN_SRC emacs-lisp
-   
+
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
@@ -192,7 +199,7 @@ Including indent-buffer, which should not be called automatically on save."
    file is written in org-mode.
    #+BEGIN_SRC emacs-lisp
      (use-package org-bullets
-     :ensure t 
+     :ensure t
      :init
      (add-hook 'org-mode-hook 'org-bullets-mode))
      (setq org-hide-emphasis-markers t)
@@ -262,7 +269,36 @@ Including indent-buffer, which should not be called automatically on save."
    :ensure t
    :init
    (global-set-key "\C-s" 'swiper))
-   
+
+   #+END_SRC
+** Company and Irony
+   Some shit for autocompletion and that kind of shit.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package company
+       :ensure t
+       :config
+       (setq company-idle-delay 0)
+       (setq company-minimum-prefix-length 3))
+     (with-eval-after-load 'company
+       (define-key company-active-map (kbd "M-n") nil)
+       (define-key company-active-map (kbd "M-p") nil)
+       (define-key company-active-map (kbd "C-n") #'company-select-next)
+       (define-key company-active-map (kbd "C-p") #'company-select-previous))
+
+     (use-package company-irony
+       :ensure t
+       :config
+       (require 'company)
+       (add-to-list 'company-backends 'company-irony))
+
+     (use-package irony
+       :ensure t
+       :config
+       (add-hook 'c-mode-hook 'irony-mode)
+       (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-option))
+     (with-eval-after-load 'company
+       (add-hook 'c-mode-hook 'company-mode))
    #+END_SRC
 * ido
   Ido is a replacement for keybindings such as C-x C-f and C-x b. Here
@@ -304,15 +340,13 @@ Including indent-buffer, which should not be called automatically on save."
   Powerline, because emacs default bar sucks
   #+BEGIN_SRC emacs-lisp
 
-(use-package powerline
-:ensure t
-:init
-(powerline-default-theme)
+  (use-package powerline
+  :ensure t
+  :init
+  (powerline-default-theme)
 
-    (set-face-background 'mode-line
-    "#080c0d")
-    (set-face-foreground 'mode-line
-    "#cad5d8"))
+  (set-face-background 'mode-line
+  "#080c0d")
+  (set-face-foreground 'mode-line
+  "#cad5d8"))
   #+
-
-

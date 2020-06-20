@@ -101,12 +101,23 @@ Including indent-buffer, which should not be called automatically on save."
   it. I don't think i'd ever use the overwritten.
 
   #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c n") 'cleanup-buffer)
-(global-set-key (kbd "M-m") 'mark-whole-buffer)
-(use-package sudo-edit
-:ensure t
-:init
-(global-set-key (kbd "C-x C-r") 'sudo-edit-find-file))
+    (global-set-key (kbd "C-c n") 'cleanup-buffer)
+    (global-set-key (kbd "M-m") 'mark-whole-buffer)
+    (use-package sudo-edit
+    :ensure t
+    :init
+    (global-set-key (kbd "C-x C-r") 'sudo-edit-find-file))
+    ;; dd in Vim, this is here because call-cc told me.
+
+    (defun delete-shit ()
+      (interactive)
+      (move-beginning-of-line nil)
+      (kill-line)
+      (forward-line -1))
+
+    (global-set-key (kbd "M-m") 'delete-shit)
+
+
   #+END_SRC
 
 * No idea

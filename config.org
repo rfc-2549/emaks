@@ -466,7 +466,7 @@ Including indent-buffer, which should not be called automatically on save."
   (bookmarks . 5)))
   (setq dashboard-startup-banner 'logo)
   (setq dashboard-banner-logo-title "Welcome to Editor MACroS")
-
+ (setq dashboard-startup-banner "~/.emacs.d/img/logo.png")
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t))
   #+END_SRC

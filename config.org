@@ -1,3 +1,4 @@
+
 #+AUTHOR: qorg11
 #+TITLE: emacs config
 #+OPTIONS: toc:nil
@@ -425,15 +426,23 @@ Including indent-buffer, which should not be called automatically on save."
    (blink-cursor-mode 0)
 
    #+END_SRC
-** Lisp things
-
-   #+BEGIN_SRC emacs-lisp
+** Programming language things
+*** Lisp
+    Rainbow parentheses, If someone can tell me why it does not
+    work. please tell me.
+    #+BEGIN_SRC emacs-lisp
    (use-package rainbow-delimiters
    :ensure t
    :init
    (add-hook 'emacs-lisp-mode 'rainbow-delimiters-mode))
 
-   #+END_SRC
+    #+END_SRC
+*** Perl
+    Cperl-mode is better than perl-mode. You can't change my mind.
+    #+BEGIN_SRC emacs-lisp
+    (defalias 'perl-mode 'cperl-mode)
+
+    #+END_SRC
 ** Beacon mode
    's cool
    #+BEGIN_SRC emacs-lisp

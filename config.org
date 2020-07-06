@@ -1,10 +1,9 @@
-
 #+AUTHOR: qorg11
 #+TITLE: emacs config
 #+OPTIONS: toc:nil
 
 * qorg's Emacs config
-
+  
   This is my Emacs configuration. Hope you like it.
 
 ** Installation
@@ -17,7 +16,7 @@
    * I don't like spacemacs
    * I don't want to learn doom emacs
    * I don't want to learn spacemacs
-
+   * I don't like Vim
 ** About me
    Here I set variables about personal information i'll use later in
    this config.
@@ -108,17 +107,6 @@ Including indent-buffer, which should not be called automatically on save."
     :ensure t
     :init
     (global-set-key (kbd "C-x C-r") 'sudo-edit-find-file))
-    ;; dd in Vim, this is here because call-cc told me.
-
-    (defun delete-shit ()
-      (interactive)
-      (move-beginning-of-line nil)
-      (kill-line)
-      (forward-line -1))
-
-    (global-set-key (kbd "M-m") 'delete-shit)
-
-
   #+END_SRC
 
 * No idea
@@ -450,6 +438,14 @@ Including indent-buffer, which should not be called automatically on save."
    :ensure t
    :init(beacon-mode 1))
    #+END_SRC
+** erc
+   Erc is an irc client that is used inside emacs.
+   Here I configure it.
+   #+BEGIN_SRC emacs-lisp
+   (setq erc-default-server website)
+   (setq erc-nick name)
+   
+   #+END_SRC
 * ido
   Ido is a replacement for keybindings such as C-x C-f and C-x b. Here
   I rebinded C-x C-b to ido-switch-buffer because I always press C-x
@@ -471,7 +467,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 * Dashboard
   Dashboard. You can change
-  ~/.emacs.d/elpa/dashboard-20200306.1344/banners/logo.png to use your
+  ~/.emacs.d/img/logo.png
   own logo instead of Lain.
   #+BEGIN_SRC emacs-lisp
   (use-package dashboard
@@ -486,19 +482,13 @@ Including indent-buffer, which should not be called automatically on save."
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t))
   #+END_SRC
-* Powerline
-  Powerline, because emacs default bar sucks
+* Doom Emacs line
+  Doom-modeline, because emacs default bar sucks
   #+BEGIN_SRC emacs-lisp
 
-  (use-package powerline
-  :ensure t
-  :init
-  (powerline-default-theme)
-
-  (set-face-background 'mode-line
-  "#080c0d")
-  (set-face-foreground 'mode-line
-  "#cad5d8"))
+    (use-package doom-modeline
+      :ensure t
+      :init(doom-modeline-mode 1))
   #+END_SRC
 
 * Screenshot

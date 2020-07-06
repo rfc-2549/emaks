@@ -448,6 +448,15 @@ Including indent-buffer, which should not be called automatically on save."
    (setq erc-nick name)
    
    #+END_SRC
+** Extra functions
+   Here I put functions I won't bother to document because they're so
+   simple.
+   #+BEGIN_SRC emacs-lisp
+     (defun git-pushall ()
+       (interactive)
+       (shell-command "git pushall"))
+
+   #+END_SRC
 * ido
   Ido is a replacement for keybindings such as C-x C-f and C-x b. Here
   I rebinded C-x C-b to ido-switch-buffer because I always press C-x

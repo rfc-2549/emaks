@@ -356,6 +356,17 @@ Including indent-buffer, which should not be called automatically on save."
     (defalias 'perl-mode 'cperl-mode)
 
     #+END_SRC
+*** C
+    This use c-eldoc mode so it prints the function's prototype in the
+    minibuffer. Which is very useful since Irony works when it wants
+    to.
+    #+BEGIN_SRC emacs-lisp
+    (use-package c-eldoc
+    :ensure t
+    :init
+    (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode))
+    
+    #+END_SRC
 ** Beacon mode
    's cool
    #+BEGIN_SRC emacs-lisp

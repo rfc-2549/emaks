@@ -240,7 +240,7 @@ Including indent-buffer, which should not be called automatically on save."
 	((t (:background "#333")))))
 
      ;; Org mode fixes
-
+(if (display-graphic-p)
      (let* ((variable-tuple
 	     (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
 		   ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
@@ -261,7 +261,7 @@ Including indent-buffer, which should not be called automatically on save."
 	`(org-level-3 ((t (,@headline ,@variable-tuple :height 1.1))))
 	`(org-level-2 ((t (,@headline ,@variable-tuple :height 1.2))))
 	`(org-level-1 ((t (,@headline ,@variable-tuple :height 1.4))))
-	`(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+	`(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil)))))))
    #+END_SRC
 ** AucTeX
    This basically opens zathura when compiling with auctex (C-c C-a)

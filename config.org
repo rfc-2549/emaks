@@ -1,3 +1,4 @@
+
 #+AUTHOR: qorg11
 #+TITLE: emacs config
 #+OPTIONS: toc:nil
@@ -200,9 +201,10 @@ Including indent-buffer, which should not be called automatically on save."
      (use-package org-bullets
      :ensure t
      :init
+     (if (display-graphic-p)
      (add-hook 'org-mode-hook 'org-bullets-mode))
      (setq org-hide-emphasis-markers t)
-     (setq org-src-window-setup 'current-window)
+     (setq org-src-window-setup 'current-window))
    #+END_SRC
 
 ** Relative lines
@@ -277,7 +279,7 @@ Including indent-buffer, which should not be called automatically on save."
 ** Shell
    #+BEGIN_SRC emacs-lisp
    (setq shell "/bin/bash")
-   (defadvice ansi-term (before force-bsah)
+   (defadvice ansi-term (before force-bash)
   (interactive (list shell)))
   (ad-activate 'ansi-term)
 
@@ -288,7 +290,7 @@ Including indent-buffer, which should not be called automatically on save."
    :ensure t
    :init
    (global-set-key "\C-s" 'swiper))
-
+   
    #+END_SRC
 ** Company and Irony
    Some shit for autocompletion and that kind of shit.
@@ -334,6 +336,7 @@ Including indent-buffer, which should not be called automatically on save."
    Here I put things you can do in M-x or something idk
    #+BEGIN_SRC emacs-lisp
    (blink-cursor-mode 0)
+   (hl-line-mode 1)
    (setq-default cursor-type 'bar)
    #+END_SRC
 ** Programming language things

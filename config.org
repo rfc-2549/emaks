@@ -42,20 +42,22 @@
   melpa, where you get the packages. This also installs use-package,
   and other packages I use.
   #+BEGIN_SRC emacs-lisp
-(require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+    (require 'package)
+    (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+			(not (gnutls-available-p))))
+	   (proto (if no-ssl "http" "https")))
+      ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+      (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+      ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+      (when (< emacs-major-version 24)
+	;; For important compatibility libraries like cl-lib
+	(add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
 
+    (if (< emacs-major-version 27)
+	 (package-initialize))
+    (unless (package-installed-p 'use-package)
+      (package-refresh-contents)
+      (package-install 'use-package))
   #+END_SRC
 ** Generic packages
    Here I install some packages that don't need configuration.
@@ -398,6 +400,12 @@ Including indent-buffer, which should not be called automatically on save."
        (backward-word)
        (kill-word 1))
      (global-set-key (kbd "M-C-k") 'kill-inner-word)
+   #+END_SRC
+** Weechat
+   erc sucks, irc sucks, weechat does not. (see [[https://github.com/bqv/weechat.el/tree/rx-range][this]])
+   #+BEGIN_SRC emacs-lisp
+   (add-to-list 'load-path (expand-file-name "~/.emacs.d/elpa/weechat/weechat-20190520.1551"))
+   (require 'weechat)
    #+END_SRC
 * ido
   Ido is a replacement for keybindings such as C-x C-f and C-x b. Here

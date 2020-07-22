@@ -426,6 +426,14 @@ Including indent-buffer, which should not be called automatically on save."
 
    
    #+END_SRC
+** Hunspell
+   For some reason, there is no ispell spanish in void linux. so i had
+   to fallback to hunspell. which does the same.
+   #+BEGIN_SRC emacs-lisp
+     (defvar ispell-program-name "hunspell") ;; Or whatever you use
+					     ;; (ispell, aspell...)
+
+   #+END_SRC
 * ido
   Ido is a replacement for keybindings such as C-x C-f and C-x b. Here
   I rebinded C-x C-b to ido-switch-buffer because I always press C-x

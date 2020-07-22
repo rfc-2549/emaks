@@ -412,6 +412,20 @@ Including indent-buffer, which should not be called automatically on save."
    :init
    (global-set-key [f8] 'treemacs))
    #+END_SRC
+** C-2 to matching parentheses
+   This make the C-2 show the matching parenthesis. like % in Vi.
+   #+BEGIN_SRC emacs-lisp
+   (global-set-key (kbd "C-2") 'match-paren)
+          
+          (defun match-paren (arg)
+            "Go to the matching paren if on a paren; otherwise insert %."
+            (interactive "p")
+            (cond ((looking-at "\\s(") (forward-list 1) (backward-char 1))
+                  ((looking-at "\\s)") (forward-char 1) (backward-list 1))
+                  (t (self-insert-command (or arg 1)))))
+
+   
+   #+END_SRC
 * ido
   Ido is a replacement for keybindings such as C-x C-f and C-x b. Here
   I rebinded C-x C-b to ido-switch-buffer because I always press C-x

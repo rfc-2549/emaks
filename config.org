@@ -231,10 +231,10 @@ Including indent-buffer, which should not be called automatically on save."
 ** theme
    Emacs theme, among other things.
    #+BEGIN_SRC emacs-lisp
-     (use-package modus-vivendi-theme
+     (use-package laguna-theme
        :ensure t
        :init
-       (load-theme 'modus-vivendi t))
+       (load-theme 'laguna t))
 
 
      (custom-set-faces
@@ -399,8 +399,10 @@ Including indent-buffer, which should not be called automatically on save."
 ** Weechat
    erc sucks, irc sucks, weechat does not. (see [[https://github.com/bqv/weechat.el/tree/rx-range][this]])
    #+BEGIN_SRC emacs-lisp
-   (add-to-list 'load-path (expand-file-name "~/.emacs.d/elpa/weechat/weechat-20190520.1551"))
-   (require 'weechat)
+     (setq directory "~/.emacs.d/elpa/weechat-20190520.1551/Makefile")
+
+     (if (file-exists-p directory)
+	 (add-to-list 'load-path (expand-file-name "~/.emacs.d/elpa/weechat/weechat-20190520.1551")(require 'weechat)))
    #+END_SRC
 ** Tree
    Emacs sidebar. soykafy but it works
@@ -449,7 +451,6 @@ Including indent-buffer, which should not be called automatically on save."
 * Doom Emacs line
   Doom-modeline, because emacs default bar sucks
   #+BEGIN_SRC emacs-lisp
-
     (use-package doom-modeline
       :ensure t
       :init(doom-modeline-mode 1))

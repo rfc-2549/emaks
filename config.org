@@ -1,6 +1,5 @@
 #+AUTHOR: qorg11
 #+TITLE: emacs config
-#+OPTIONS: toc:nil
 
 * qorg's Emacs config
 

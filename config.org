@@ -146,7 +146,7 @@ Including indent-buffer, which should not be called automatically on save."
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
-  (set-frame-font "Terminus 14" nil t)
+  (set-frame-font "Terminus 19" nil t)
     (load-file "~/.emacs.d/markup.el")
     (use-package smex
     :ensure t
@@ -402,7 +402,7 @@ Including indent-buffer, which should not be called automatically on save."
      (setq directory "~/.emacs.d/elpa/weechat-20190520.1551/Makefile")
 
      (if (file-exists-p directory)
-	 (add-to-list 'load-path (expand-file-name "~/.emacs.d/elpa/weechat/weechat-20190520.1551")(require 'weechat)))
+         (add-to-list 'load-path (expand-file-name "~/.emacs.d/elpa/weechat/weechat-20190520.1551")(require 'weechat)))
    #+END_SRC
 ** Tree
    Emacs sidebar. soykafy but it works
@@ -416,7 +416,7 @@ Including indent-buffer, which should not be called automatically on save."
    This make the C-2 show the matching parenthesis. like % in Vi.
    #+BEGIN_SRC emacs-lisp
    (global-set-key (kbd "C-2") 'match-paren)
-          
+
           (defun match-paren (arg)
             "Go to the matching paren if on a paren; otherwise insert %."
             (interactive "p")
@@ -424,15 +424,35 @@ Including indent-buffer, which should not be called automatically on save."
                   ((looking-at "\\s)") (forward-char 1) (backward-list 1))
                   (t (self-insert-command (or arg 1)))))
 
-   
+
    #+END_SRC
 ** Hunspell
    For some reason, there is no ispell spanish in void linux. so i had
    to fallback to hunspell. which does the same.
    #+BEGIN_SRC emacs-lisp
      (defvar ispell-program-name "hunspell") ;; Or whatever you use
-					     ;; (ispell, aspell...)
+                                             ;; (ispell, aspell...)
 
+   #+END_SRC
+** Dired
+   Ahhh, the emacs file browser, better than ranger and others...
+
+   Hide dotfiles:
+   #+BEGIN_SRC emacs-lisp
+
+     (use-package dired-hide-dotfiles
+       :ensure t
+       :init
+
+       (defun my-dired-mode-hook ()
+	 "My `dired' mode hook."
+	 ;; To hide dot-files by default
+	 (dired-hide-dotfiles-mode)
+
+	 ;; To toggle hiding
+	 (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
+
+       (add-hook 'dired-mode-hook #'my-dired-mode-hook))
    #+END_SRC
 * ido
   Ido is a replacement for keybindings such as C-x C-f and C-x b. Here
@@ -481,5 +501,3 @@ Including indent-buffer, which should not be called automatically on save."
 * Screenshot
 
   [[./screenshot.png]]
-
-

@@ -349,6 +349,19 @@ Including indent-buffer, which should not be called automatically on save."
    (setq erc-nick name)
 
    #+END_SRC
+   Now, erc is annoying as shit for default servers. So here i define
+   a few functions to quickly connect to them
+   #+BEGIN_SRC emacs-lisp
+     (defun erc/freenode ()
+       (interactive)
+       (erc :server "irc.freenode.org" :nick "qorg11"))
+     (defun erc/rizon ()
+       (interactive)
+       (erc :server "irc.rizon.net" :nick "qorg11"))
+     (defun erc/kill9 ()
+       (interactive)
+       (erc :server "kill-9.xyz" :nick "qorg11"))
+   #+END_SRC
 ** Extra functions
    Here I put functions I won't bother to document because they're so
    simple.

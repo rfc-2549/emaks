@@ -1,0 +1,7 @@
+* Contributing to my Emacs config
+
+Altough this is *my* emacs configuration, you can contribute to it!
+Since I have a lot of mirrors in different git hosting services, you
+should send me a .patch file wherever you can. You can also merge
+request (in gitlab) or pull request (in github), i'll manage to make
+it work. but if you can just use a .patch, that would be very nice.

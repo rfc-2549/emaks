@@ -448,16 +448,14 @@ Including indent-buffer, which should not be called automatically on save."
   I rebinded C-x C-b to ido-switch-buffer because I always press C-x
   C-b instead of C-x b
   #+BEGIN_SRC emacs-lisp
-  (use-package ido-vertical-mode
-   :ensure t
-   :init
+  (load "~/.emacs.d/ido-vertical.el")
   (setq ido-enable-flex-matching nil)
   (setq ido-create-new-buffer 'always)
   (setq ido-everywhere t)
   (ido-mode 1)
   (ido-vertical-mode 1)
   (setq ido-vertical-define-keys 'C-n-and-C-p-only)
-  (global-set-key (kbd "C-x C-b") 'ido-switch-buffer))
+  (global-set-key (kbd "C-x C-b") 'ido-switch-buffer)
 
 
   #+END_SRC

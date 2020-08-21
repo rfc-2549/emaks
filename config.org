@@ -147,7 +147,7 @@ Including indent-buffer, which should not be called automatically on save."
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
-  (set-frame-font "Terminus 19" nil t)
+  (set-frame-font "IBM Plex Mono 14" nil t)
     (load-file "~/.emacs.d/markup.el")
     (use-package smex
     :ensure t
@@ -205,6 +205,14 @@ Including indent-buffer, which should not be called automatically on save."
      (add-hook 'org-mode-hook 'org-bullets-mode))
      (setq org-hide-emphasis-markers t)
      (setq org-src-window-setup 'current-window))
+   #+END_SRC
+
+** Theme
+   #+BEGIN_SRC emacs-lisp
+   (use-package laguna-theme
+   :ensure t
+   :init(load-theme 'laguna t))
+   
    #+END_SRC
 
 ** Relative lines
@@ -426,12 +434,12 @@ Including indent-buffer, which should not be called automatically on save."
        :init
 
        (defun my-dired-mode-hook ()
-	 "My `dired' mode hook."
-	 ;; To hide dot-files by default
-	 (dired-hide-dotfiles-mode)
+         "My `dired' mode hook."
+         ;; To hide dot-files by default
+         (dired-hide-dotfiles-mode)
 
-	 ;; To toggle hiding
-	 (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
+         ;; To toggle hiding
+         (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
 
        (add-hook 'dired-mode-hook #'my-dired-mode-hook))
    #+END_SRC
@@ -474,15 +482,10 @@ Including indent-buffer, which should not be called automatically on save."
 * Line
   Line, lol
   #+BEGIN_SRC emacs-lisp
-(use-package spaceline
+(use-package doom-modeline
   :ensure t
   :config
-  (require 'spaceline-config)
-    (setq spaceline-buffer-encoding-abbrev-p nil)
-    (setq spaceline-line-column-p nil)
-    (setq spaceline-line-p nil)
-    (setq powerline-default-separator (quote arrow))
-    (spaceline-spacemacs-theme))
+    (doom-modeline-mode))
   #+END_SRC
 
 * Screenshot

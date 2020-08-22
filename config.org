@@ -453,6 +453,17 @@ Including indent-buffer, which should not be called automatically on save."
        (global-set-key (kbd "C-x C-n") 'centaur-tabs-forward)
        (global-set-key (kbd "C-x C-p") 'centaur-tabs-backward))
    #+END_SRC
+** Highlight identation
+   yeah i need it lol
+   #+BEGIN_SRC emacs-lisp
+     (use-package highlight-indent-guides
+	 :ensure t
+	 :init
+	 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+	 (setq highlight-indent-guides-method 'bitmap))
+
+   #+END_SRC
+
 * ido
   Ido is a replacement for keybindings such as C-x C-f and C-x b. Here
   I rebinded C-x C-b to ido-switch-buffer because I always press C-x
@@ -503,3 +514,4 @@ Including indent-buffer, which should not be called automatically on save."
 * Screenshot
 
   [[./screenshot.png]]
+  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)

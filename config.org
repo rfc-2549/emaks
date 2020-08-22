@@ -212,7 +212,7 @@ Including indent-buffer, which should not be called automatically on save."
    (use-package laguna-theme
    :ensure t
    :init(load-theme 'laguna t))
-   
+
    #+END_SRC
 
 ** Relative lines
@@ -443,10 +443,24 @@ Including indent-buffer, which should not be called automatically on save."
 
        (add-hook 'dired-mode-hook #'my-dired-mode-hook))
    #+END_SRC
+** Tabs
+   I use tabs because they're not, uh, tree styled tabs for emacs...
+   #+BEGIN_SRC emacs-lisp
+     (use-package centaur-tabs
+       :ensure t
+       :init
+       (centaur-tabs-mode t)
+       (global-set-key (kbd "C-x C-n") 'centaur-tabs-forward)
+       (global-set-key (kbd "C-x C-p") 'centaur-tabs-backward))
+   #+END_SRC
 * ido
   Ido is a replacement for keybindings such as C-x C-f and C-x b. Here
   I rebinded C-x C-b to ido-switch-buffer because I always press C-x
   C-b instead of C-x b
+
+  Since for some reason the regular ido-vertical stopped working, i
+  had to use a fork i found in github, so that's why i use (load)
+  instead of (use-package)
   #+BEGIN_SRC emacs-lisp
   (load "~/.emacs.d/ido-vertical.el")
   (setq ido-enable-flex-matching nil)

@@ -37,6 +37,13 @@
    Using M-x irony-install-server requires cmake and a lot of
    dependences I'm to lazy to install.
 
+** Configuration
+   Yeah, this configuration file has a configuration, ironic ha?
+   #+BEGIN_SRC emacs-lisp
+   (setq i-just-use-emacs-to-be-cool nil) ;; Repleace to false to use EVIL
+   
+   #+END_SRC
+
 * melpa crap, and basic packages installation
   melpa, where you get the packages. This also installs use-package,
   and other packages I use.
@@ -209,9 +216,9 @@ Including indent-buffer, which should not be called automatically on save."
 
 ** Theme
    #+BEGIN_SRC emacs-lisp
-   (use-package laguna-theme
+   (use-package humanoid-themes
    :ensure t
-   :init(load-theme 'laguna t))
+   :init(load-theme 'humanoid-dark t))
 
    #+END_SRC
 
@@ -309,7 +316,7 @@ Including indent-buffer, which should not be called automatically on save."
    #+BEGIN_SRC emacs-lisp
    (blink-cursor-mode 0)
    (global-hl-line-mode 1)
-   (setq-default cursor-type 'bar)
+   (setq-default cursor-type 'block)
    #+END_SRC
 ** Programming language things
 *** Lisp
@@ -457,10 +464,29 @@ Including indent-buffer, which should not be called automatically on save."
    yeah i need it lol
    #+BEGIN_SRC emacs-lisp
      (use-package highlight-indent-guides
-	 :ensure t
-	 :init
-	 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-	 (setq highlight-indent-guides-method 'bitmap))
+         :ensure t
+         :init
+         (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+         (setq highlight-indent-guides-method 'bitmap))
+
+   #+END_SRC
+
+** kill ring popup
+   #+BEGIN_SRC emacs-lisp
+   (use-package popup-kill-ring
+  :ensure t
+  :bind ("M-y" . popup-kill-ring))
+
+
+   #+END_SRC
+
+** Evil
+   Hyper this is for you :p
+   #+BEGIN_SRC emacs-lisp
+     (if i-just-use-emacs-to-be-cool
+	 (use-package evil
+	   :ensure t
+	   :init (evil-mode)))
 
    #+END_SRC
 

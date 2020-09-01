@@ -40,7 +40,7 @@
 ** Configuration
    Yeah, this configuration file has a configuration, ironic ha?
    #+BEGIN_SRC emacs-lisp
-   (setq i-just-use-emacs-to-be-cool nil) ;; Repleace to false to use EVIL
+   (setq i-just-use-emacs-to-be-cool nil) ;; Repleace to true to use EVIL
    
    #+END_SRC
 

@@ -154,7 +154,7 @@ Including indent-buffer, which should not be called automatically on save."
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
-  (set-frame-font "IBM Plex Mono 14" nil t)
+  (set-frame-font "IBM Plex Mono Italic 14" nil t)
     (load-file "~/.emacs.d/markup.el")
     (use-package smex
     :ensure t
@@ -315,7 +315,7 @@ Including indent-buffer, which should not be called automatically on save."
    Here I put things you can do in M-x or something idk
    #+BEGIN_SRC emacs-lisp
    (blink-cursor-mode 0)
-   (global-hl-line-mode 1)
+   (global-hl-line-mode 0)
    (setq-default cursor-type 'block)
    #+END_SRC
 ** Programming language things
@@ -346,7 +346,7 @@ Including indent-buffer, which should not be called automatically on save."
     :ensure t
     :init
     (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode))
-
+    (setq c-default-style "k&r")
     #+END_SRC
 
 ** Beacon mode
@@ -487,7 +487,6 @@ Including indent-buffer, which should not be called automatically on save."
 	 (use-package evil
 	   :ensure t
 	   :init (evil-mode)))
-
    #+END_SRC
 
 * ido

@@ -1,4 +1,3 @@
-
 #+AUTHOR: qorg11
 #+TITLE: emacs config
 
@@ -41,7 +40,7 @@
    Yeah, this configuration file has a configuration, ironic ha?
    #+BEGIN_SRC emacs-lisp
    (setq i-just-use-emacs-to-be-cool nil) ;; Repleace to true to use EVIL
-   
+
    #+END_SRC
 
 * melpa crap, and basic packages installation
@@ -72,12 +71,16 @@
    #+BEGIN_SRC emacs-lisp
 
    (use-package markdown-mode
+   :defer 1
    :ensure t)
    (use-package web-mode
+   :defer 1
    :ensure t)
    (use-package magit
+   :defer 1
    :ensure t)
    (use-package all-the-icons
+   :defer 1
    :ensure t)
    (use-package which-key
    :ensure t
@@ -113,6 +116,7 @@ Including indent-buffer, which should not be called automatically on save."
     (global-set-key (kbd "M-m") 'mark-whole-buffer)
     (use-package sudo-edit
     :ensure t
+    :defer 1
     :init
     (global-set-key (kbd "C-x C-r") 'sudo-edit-find-file))
   #+END_SRC
@@ -137,6 +141,7 @@ Including indent-buffer, which should not be called automatically on save."
   (add-hook 'after-make-frame-functions 'contextual-menubar)
   (use-package zencoding-mode
   :ensure t
+  :defer 1
   :init
   (add-hook 'sgml-mode-hook 'zencoding-mode))
   (setq-default dired-details-hidden-string "---- ")
@@ -154,10 +159,11 @@ Including indent-buffer, which should not be called automatically on save."
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
-  (set-frame-font "IBM Plex Mono 14" nil t)
+  (set-frame-font "Terminus 18" nil t)
     (load-file "~/.emacs.d/markup.el")
     (use-package smex
     :ensure t
+    :defer 1
     :init
    (global-set-key (kbd "M-x") 'smex))
 
@@ -212,7 +218,7 @@ Including indent-buffer, which should not be called automatically on save."
      (add-hook 'org-mode-hook 'org-bullets-mode))
      (setq org-hide-emphasis-markers t)
      (setq org-src-window-setup 'current-window))
-     
+
 (let* ((variable-tuple
         (cond ((x-list-fonts "IBM Plex Mono")         '(:font "IBM Plex Mono"))
               ((x-list-fonts "Source Sans Pro") '(:font "IBM Plex Mono"))
@@ -237,25 +243,16 @@ Including indent-buffer, which should not be called automatically on save."
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
-   (use-package cyberpunk-theme
+   (use-package afternoon-theme
    :ensure t
-   :init (load-theme 'cyberpunk t))
+   :init (load-theme 'afternoon t))
    #+END_SRC
 
 ** Relative lines
-   #+BEGIN_SRC emacs-lisp
-  (use-package linum-relative
-  :ensure t
-  :init
-  (setq-default display-line-numbers-type 'relative
-  display-line-numbers-current-relative t
-  display-line-numbers-width 1
-  display-line-numbers-widen t)
-
-  (add-hook 'text-mode-hook #'display-line-numbers-mode)
-  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-  (column-number-mode 1))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+    (global-display-line-numbers-mode 1)
+    (setq display-line-numbers-type 'relative)
+    #+END_SRC
 ** Flycheck
    Flycheck is a syntax validator or somehting like that
    #+BEGIN_SRC emacs-lisp
@@ -287,6 +284,7 @@ Including indent-buffer, which should not be called automatically on save."
    #+BEGIN_SRC emacs-lisp
    (use-package swiper
    :ensure t
+   :defer 1
    :init
    (global-set-key "\C-s" 'swiper))
 
@@ -320,16 +318,6 @@ Including indent-buffer, which should not be called automatically on save."
        (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
      (with-eval-after-load 'company
        (add-hook 'c-mode-hook 'company-mode))
-   #+END_SRC
-** Yasnippet
-   Sometimes i'm just to lazy to write.
-   #+BEGIN_SRC emacs-lisp
-     (use-package yasnippet
-       :ensure t
-       :init
-       (yas-global-mode 1))
-     (use-package yasnippet-snippets
-       :ensure t)
    #+END_SRC
 ** Idk what to name this
    Here I put things you can do in M-x or something idk
@@ -405,36 +393,6 @@ Including indent-buffer, which should not be called automatically on save."
        (kill-word 1))
      (global-set-key (kbd "M-C-k") 'kill-inner-word)
    #+END_SRC
-** Weechat
-   erc sucks, irc sucks, weechat does not. (see [[https://github.com/bqv/weechat.el/tree/rx-range][this]])
-   #+BEGIN_SRC emacs-lisp
-     (setq directory "~/.emacs.d/elpa/weechat-20190520.1551/Makefile")
-
-     (if (file-exists-p directory)
-         (add-to-list 'load-path (expand-file-name "~/.emacs.d/elpa/weechat/weechat-20190520.1551")(require 'weechat)))
-   #+END_SRC
-** Tree
-   Emacs sidebar. soykafy but it works
-   #+BEGIN_SRC emacs-lisp
-   (use-package treemacs
-   :ensure t
-   :init
-   (global-set-key [f8] 'treemacs))
-   #+END_SRC
-** C-2 to matching parentheses
-   This make the C-2 show the matching parenthesis. like % in Vi.
-   #+BEGIN_SRC emacs-lisp
-   (global-set-key (kbd "C-2") 'match-paren)
-
-          (defun match-paren (arg)
-            "Go to the matching paren if on a paren; otherwise insert %."
-            (interactive "p")
-            (cond ((looking-at "\\s(") (forward-list 1) (backward-char 1))
-                  ((looking-at "\\s)") (forward-char 1) (backward-list 1))
-                  (t (self-insert-command (or arg 1)))))
-
-
-   #+END_SRC
 ** Hunspell
    For some reason, there is no ispell spanish in void linux. so i had
    to fallback to hunspell. which does the same.
@@ -463,16 +421,6 @@ Including indent-buffer, which should not be called automatically on save."
 
        (add-hook 'dired-mode-hook #'my-dired-mode-hook))
    #+END_SRC
-** Tabs
-   I use tabs because they're not, uh, tree styled tabs for emacs...
-   #+BEGIN_SRC emacs-lisp
-     (use-package centaur-tabs
-       :ensure t
-       :init
-       (centaur-tabs-mode t)
-       (global-set-key (kbd "C-x C-n") 'centaur-tabs-forward)
-       (global-set-key (kbd "C-x C-p") 'centaur-tabs-backward))
-   #+END_SRC
 ** Highlight identation
    yeah i need it lol
    #+BEGIN_SRC emacs-lisp
@@ -491,15 +439,6 @@ Including indent-buffer, which should not be called automatically on save."
   :bind ("M-y" . popup-kill-ring))
 
 
-   #+END_SRC
-
-** Evil
-   Hyper this is for you :p
-   #+BEGIN_SRC emacs-lisp
-     (if i-just-use-emacs-to-be-cool
-	 (use-package evil
-	   :ensure t
-	   :init (evil-mode)))
    #+END_SRC
 
 * ido
@@ -544,7 +483,8 @@ Including indent-buffer, which should not be called automatically on save."
   Line, lol
   #+BEGIN_SRC emacs-lisp
 (use-package doom-modeline
-  :ensure t
+:ensure t
+:defer 1
   :config
     (doom-modeline-mode))
   #+END_SRC
@@ -553,3 +493,4 @@ Including indent-buffer, which should not be called automatically on save."
 
   [[./screenshot.png]]
   (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+

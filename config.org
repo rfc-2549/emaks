@@ -144,9 +144,6 @@ Including indent-buffer, which should not be called automatically on save."
   :defer 1
   :init
   (add-hook 'sgml-mode-hook 'zencoding-mode))
-  (setq-default dired-details-hidden-string "---- ")
-
-  ;; (icomplete-mode 1) Deprecated, used ido-mode instead
   #+END_SRC
 
 * customization
@@ -218,7 +215,7 @@ Including indent-buffer, which should not be called automatically on save."
      (add-hook 'org-mode-hook 'org-bullets-mode))
      (setq org-hide-emphasis-markers t)
      (setq org-src-window-setup 'current-window))
-
+(if (display-graphic-p)
 (let* ((variable-tuple
         (cond ((x-list-fonts "IBM Plex Mono")         '(:font "IBM Plex Mono"))
               ((x-list-fonts "Source Sans Pro") '(:font "IBM Plex Mono"))
@@ -239,13 +236,13 @@ Including indent-buffer, which should not be called automatically on save."
    `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.1))))
    `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.2))))
    `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.3))))
-   `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+   `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil)))))))
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
-   (use-package afternoon-theme
+   (use-package cyberpunk-theme
    :ensure t
-   :init (load-theme 'afternoon t))
+   :init (load-theme 'cyberpunk t))
    #+END_SRC
 
 ** Relative lines
@@ -441,6 +438,14 @@ Including indent-buffer, which should not be called automatically on save."
 
    #+END_SRC
 
+** Dired
+   #+BEGIN_SRC emacs-lisp
+   (add-hook 'dired-mode-hook
+      (lambda ()
+        (dired-hide-details-mode)))
+
+   #+END_SRC
+
 * ido
   Ido is a replacement for keybindings such as C-x C-f and C-x b. Here
   I rebinded C-x C-b to ido-switch-buffer because I always press C-x
@@ -475,7 +480,7 @@ Including indent-buffer, which should not be called automatically on save."
   (bookmarks . 5)))
   (setq dashboard-startup-banner 'logo)
   (setq dashboard-banner-logo-title "Welcome to Editor MACroS")
- (setq dashboard-startup-banner "~/.emacs.d/img/logo.png")
+ (setq dashboard-startup-banner "~/.emacs.d/img/banner.txt")
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t))
   #+END_SRC

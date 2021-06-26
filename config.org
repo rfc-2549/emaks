@@ -143,16 +143,17 @@
   Emacs customization, Here is where most of the configuration is.
 ** Disable bars font and pandoc export optxions.
    #+BEGIN_SRC emacs-lisp
-		(tool-bar-mode -1)
-		(menu-bar-mode -1)
-		(set-frame-font "Terminus 14" nil t)
-		(use-package smex
-		  :ensure t
-		  :init
-		  (global-set-key (kbd "M-x") 'helm-M-x))
-		(setq-default major-mode 'text-mode)
+	(tool-bar-mode -1)
+	(menu-bar-mode -1)
+	(set-frame-font "Terminus 14" nil t)
+	(use-package smex
+	  :ensure t
+	  :init
+	  (global-set-key (kbd "M-x") 'helm-M-x))
+	(setq-default major-mode 'text-mode)
 	(defalias 'yes-or-no-p 'y-or-n-p)
    #+END_SRC
+
 ** Highlight matching parentheses
    #+BEGIN_SRC emacs-lisp
 	(show-paren-mode 1)
@@ -171,6 +172,7 @@
 ** theme
    #+BEGIN_SRC emacs-lisp
 	(load-theme 'cyberpunk t)
+
    #+END_SRC
 ** Lines and columns
    #+BEGIN_SRC emacs-lisp
@@ -193,7 +195,7 @@
 	(defadvice ansi-term (before force-mksh)
 	  (interactive (list shell)))
 	(ad-activate 'ansi-term)
-
+	(global-set-key (kbd "<C-return>") 'ansi-term)
    #+END_SRC
 ** Swiper
    #+BEGIN_SRC emacs-lisp
@@ -212,7 +214,7 @@
 	  :ensure t
 	  :config
 	  (setq company-idle-delay 0)
-	  (setq company-minimum-prefix-length 3)
+	  (setq company-minimum-prefix-length 1)
 	  (global-company-mode))
 	(with-eval-after-load 'company
 	  (define-key company-active-map (kbd "M-n") nil)
@@ -358,6 +360,7 @@
 	(scroll-bar-mode -1)
    #+end_src
 ** Sidebar
+   
    #+BEGIN_SRC emacs-lisp
 	(use-package dired-sidebar
 	  :ensure t
@@ -379,9 +382,18 @@
 	 (use-package company-shell
 	   :ensure t
 	   :config
-		(require 'company)
-		(add-hook 'shell-mode-hook 'shell-mode-company-init))
+	   (require 'company)
+	   (add-hook 'shell-mode-hook 'shell-mode-company-init))
     #+end_src
+
+** Mark multiple
+   It's like multiple cursors but well done
+   #+begin_src emacs-lisp
+	(use-package "mark-multiple"
+	  :ensure t
+	  :bind ("C-c q" . 'mark-next-like-this))
+
+   #+end_src
 
 * Helm
   fuck ido lol

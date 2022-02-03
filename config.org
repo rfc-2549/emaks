@@ -10,7 +10,7 @@
 
    Just copy this repository to your .emacs.d. Nothing else is needed.
 
-** Why?
+**  Why?
    * I can
    * I don't like doom emacs
    * I don't like spacemacs
@@ -114,6 +114,7 @@
   #+BEGIN_SRC emacs-lisp
     (global-set-key (kbd "M-m") 'mark-whole-buffer)
   #+END_SRC
+  
 * No idea
   #+BEGIN_SRC emacs-lisp
     (setq package-enable-at-startup nil) (package-initialize)
@@ -146,10 +147,6 @@
 	(tool-bar-mode -1)
 	(menu-bar-mode -1)
 	(set-frame-font "Terminus 14" nil t)
-	(use-package smex
-	  :ensure t
-	  :init
-	  (global-set-key (kbd "M-x") 'helm-M-x))
 	(setq-default major-mode 'text-mode)
 	(defalias 'yes-or-no-p 'y-or-n-p)
    #+END_SRC
@@ -169,11 +166,6 @@
 	(set-variable 'tramp-copy-size-limit 122222222222)
 	(set-variable 'tramp-inline-compress-start-size 12222222222222)
    #+end_src
-** theme
-   #+BEGIN_SRC emacs-lisp
-	(load-theme 'cyberpunk t)
-
-   #+END_SRC
 ** Lines and columns
    #+BEGIN_SRC emacs-lisp
 	(global-display-line-numbers-mode 1)
@@ -188,6 +180,10 @@
 	  :ensure t
 	  :init
 	  (add-hook 'after-init-hook #'global-flycheck-mode))
+	(use-package flycheck-raku
+	  :ensure t
+	  :init
+	  (add-hook 'raku-mode 'flycheck-raku-mode))
    #+END_SRC
 ** Shell
    #+BEGIN_SRC emacs-lisp
@@ -197,13 +193,20 @@
 	(ad-activate 'ansi-term)
 	(global-set-key (kbd "<C-return>") 'ansi-term)
    #+END_SRC
+** Theme
+   #+begin_src emacs-lisp
+	(use-package "darkthooth-theme"
+	  :ensu
+	  )
+
+   #+end_src
 ** Swiper
    #+BEGIN_SRC emacs-lisp
-	(use-package swiper
+	(use-package ctrlf
 	  :ensure t
 	  :defer 1
 	  :init
-	  (global-set-key "\C-s" 'swiper))
+	  (ctrlf-mode +1))
    #+END_SRC
 ** Company and Irony
    Some shit for autocompletion and that kind of shit.
@@ -243,7 +246,8 @@
    #+BEGIN_SRC emacs-lisp
 	(blink-cursor-mode 0)
 	(global-hl-line-mode 0)
-	(setq-default cursor-type 'block)
+	(setq-default cursor-type 'box)
+	(blink-cursor-mode 1)
    #+END_SRC
 ** Programming language things
 *** Lisp
@@ -365,7 +369,7 @@
 	(use-package dired-sidebar
 	  :ensure t
 	  :commands (dired-sidebar-toggle-sidebar))
-	(global-set-key (kbd "<f8>") 'dired-sidebar-toggle-sidebar)
+	(global-set-key (kbd "<f7>") 'dired-sidebar-toggle-sidebar)
    #+END_SRC
 *** Shell
     #+begin_src emacs-lisp
@@ -389,14 +393,32 @@
 ** Mark multiple
    It's like multiple cursors but well done
    #+begin_src emacs-lisp
-	(use-package "mark-multiple"
+	(use-package "multiple-cursors"
 	  :ensure t
-	  :bind ("C-c q" . 'mark-next-like-this))
+	  :bind ("C-c q" . 'mc/mark-next-like-this))
 
    #+end_src
 
+** Highlight indent guides
+   #+begin_src emacs-lisp
+	(use-package "highlight-indent-guides"
+	  :ensure t
+	  :defer
+	  :init (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+	  (setq highlight-indent-guides-method 'bitmap))
+   #+end_src
+
+** Ace jump mode
+
+   #+begin_src emacs-lisp
+	(use-package "ace-jump-mode"
+	  :ensure t
+	  :bind("C-l" . 'ace-jump-mode))
+   #+end_src
+
 * Helm
-  fuck ido lol
+  
+  fuck helm lol
   #+begin_src emacs-lisp
     (use-package helm
 	 :ensure t
@@ -444,5 +466,10 @@
 	 (setq dashboard-set-file-icons t))
   #+END_SRC
 
+* Modeline
+  #+begin_src emacs-lisp
+    (use-package "telephone-line"
+	 :ensure t
+	 :init (telephone-line-mode 1))
 
-  
+  #+end_src

@@ -195,10 +195,9 @@
    #+END_SRC
 ** Theme
    #+begin_src emacs-lisp
-	(use-package "darkthooth-theme"
-	  :ensu
-	  )
-
+	(use-package "darktooth-theme"
+	  :ensure t
+	  :init(load-theme 'darktooth t))
    #+end_src
 ** Swiper
    #+BEGIN_SRC emacs-lisp

@@ -51,8 +51,8 @@
 
     ;; Lower threshold back to 8 MiB (default is 800kB)
     (add-hook 'emacs-startup-hook
-		    (lambda ()
-			 (setq gc-cons-threshold (expt 2 23))))
+	    (lambda ()
+		    (setq gc-cons-threshold (expt 2 23))))
   #+end_src
 * melpa crap, and basic packages installation
   melpa, where you get the packages. This also installs use-package,
@@ -61,19 +61,19 @@
     (require 'package)
     (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
 				    (not (gnutls-available-p))))
-		 (proto (if no-ssl "http" "https")))
-	 ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-	 (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-	 ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-	 (when (< emacs-major-version 24)
-	   ;; For important compatibility libraries like cl-lib
-	   (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+			(proto (if no-ssl "http" "https")))
+	    ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+	    (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+	    ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+	    (when (< emacs-major-version 24)
+		    ;; For important compatibility libraries like cl-lib
+		    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
 
     (if (< emacs-major-version 27)
-	   (package-initialize))
+	    (package-initialize))
     (unless (package-installed-p 'use-package)
-	 (package-refresh-contents)
-	 (package-install 'use-package))
+	    (package-refresh-contents)
+	    (package-install 'use-package))
   #+END_SRC
 ** Generic packages
    Here I install some packages that don't need configuration.
@@ -82,14 +82,14 @@
    #+BEGIN_SRC emacs-lisp
 
 	(use-package markdown-mode
-	  :defer 1
-	  :ensure t)
+		:defer 1
+		:ensure t)
 	(use-package all-the-icons
-	  :defer 1
-	  :ensure t)
+		:defer 1
+		:ensure t)
 	(use-package which-key
-	  :ensure t
-	  :init (which-key-mode))
+		:ensure t
+		:init (which-key-mode))
    #+END_SRC
 * Autoindentation
   C-c n for indent-buffer. I don't use the rest.
@@ -97,12 +97,12 @@
     (setq-default tab-width 5)
     (defvaralias 'sgml-basic-offset 'tab-width)
     (add-hook 'html-mode-hook
-		    (lambda ()
-			 (set-fill-column 100)))
+	    (lambda ()
+		    (set-fill-column 100)))
     (defun indent-buffer ()
-	 (interactive)
-	 (save-excursion
-	   (indent-region (point-min) (point-max) nil)))
+	    (interactive)
+	    (save-excursion
+		    (indent-region (point-min) (point-max) nil)))
     (global-set-key (kbd "C-c n") 'indent-buffer)
     ;; C bullshit
     (c-set-offset 'arglist-cont-nonempty '+)
@@ -125,32 +125,35 @@
 
 
     (defun contextual-menubar (&optional frame)
-	 "Display the menubar in FRAME (default: selected frame) if on a
+	    "Display the menubar in FRAME (default: selected frame) if on a
     graphical display, but hide it if in terminal."
-	 (interactive)
-	 (set-frame-parameter frame 'menu-bar-lines
-					  (if (display-graphic-p frame)
-						 1 0)))
+	    (interactive)
+	    (set-frame-parameter frame 'menu-bar-lines
+		    (if (display-graphic-p frame)
+			    1 0)))
 
     (add-hook 'after-make-frame-functions 'contextual-menubar)
     (use-package zencoding-mode
-	 :ensure t
-	 :defer 1
-	 :init
-	 (add-hook 'sgml-mode-hook 'zencoding-mode))
+	    :ensure t
+	    :defer 1
+	    :init
+	    (add-hook 'sgml-mode-hook 'zencoding-mode))
   #+END_SRC
 
 * customization
   Emacs customization, Here is where most of the configuration is.
-** Disable bars font and pandoc export optxions.
+** Pseudopersonalization
+   The basic emacs persdonalization lol
    #+BEGIN_SRC emacs-lisp
 	(tool-bar-mode -1)
 	(menu-bar-mode -1)
 	(set-frame-font "Terminus 14" nil t)
+	(global-hl-line-mode)
+	(setq-default cursor-type 'box)
+	(blink-cursor-mode 1)
 	(setq-default major-mode 'text-mode)
 	(defalias 'yes-or-no-p 'y-or-n-p)
    #+END_SRC
-
 ** Highlight matching parentheses
    #+BEGIN_SRC emacs-lisp
 	(show-paren-mode 1)
@@ -170,83 +173,78 @@
    #+BEGIN_SRC emacs-lisp
 	(global-display-line-numbers-mode 1)
 	(setq display-line-numbers-type 'relative)
-	(global-hl-line-mode 1)
 	(column-number-mode 1)
    #+END_SRC
 ** Flycheck
    Flycheck is a syntax validator or somehting like that
    #+BEGIN_SRC emacs-lisp
 	(use-package flycheck
-	  :ensure t
-	  :init
-	  (add-hook 'after-init-hook #'global-flycheck-mode))
-	(use-package flycheck-raku
-	  :ensure t
-	  :init
-	  (add-hook 'raku-mode 'flycheck-raku-mode))
+		:ensure t
+		:init
+		(add-hook 'after-init-hook #'global-flycheck-mode))
    #+END_SRC
+   And for raku
+   #+BEGIN_SRC emacs-lisp
+	(use-package flycheck-raku
+		:ensure t
+		:init
+		(add-hook 'raku-mode 'flycheck-raku-mode))
+   #+END_SRC
+
 ** Shell
    #+BEGIN_SRC emacs-lisp
 	(setq shell "/bin/mksh")
 	(defadvice ansi-term (before force-mksh)
-	  (interactive (list shell)))
+		(interactive (list shell)))
 	(ad-activate 'ansi-term)
 	(global-set-key (kbd "<C-return>") 'ansi-term)
    #+END_SRC
 ** Theme
    #+begin_src emacs-lisp
 	(use-package "darktooth-theme"
-	  :ensure t
-	  :init(load-theme 'darktooth t))
+		:ensure t
+		:init(load-theme 'darktooth t))
    #+end_src
-** Swiper
+** ctrlf
    #+BEGIN_SRC emacs-lisp
 	(use-package ctrlf
-	  :ensure t
-	  :defer 1
-	  :init
-	  (ctrlf-mode +1))
+		:ensure t
+		:defer 1
+		:init
+		(ctrlf-mode +1))
    #+END_SRC
 ** Company and Irony
    Some shit for autocompletion and that kind of shit.
 
    #+BEGIN_SRC emacs-lisp
 	(use-package company
-	  :defer 1
-	  :ensure t
-	  :config
-	  (setq company-idle-delay 0)
-	  (setq company-minimum-prefix-length 1)
-	  (global-company-mode))
+		:defer 1
+		:ensure t
+		:config
+		(setq company-idle-delay 0)
+		(setq company-minimum-prefix-length 3)
+		(global-company-mode))
 	(with-eval-after-load 'company
-	  (define-key company-active-map (kbd "M-n") nil)
-	  (define-key company-active-map (kbd "M-p") nil)
-	  (define-key company-active-map (kbd "C-n") #'company-select-next)
-	  (define-key company-active-map (kbd "C-p") #'company-select-previous))
+		(define-key company-active-map (kbd "M-n") nil)
+		(define-key company-active-map (kbd "M-p") nil)
+		(define-key company-active-map (kbd "C-n") #'company-select-next)
+		(define-key company-active-map (kbd "C-p") #'company-select-previous))
 
 	(use-package company-irony
-	  :defer 1
-	  :ensure t
-	  :config
-	  (require 'company)
-	  (add-to-list 'company-backends 'company-irony))
+		:defer 1
+		:ensure t
+		:config
+		(require 'company)
+		(add-to-list 'company-backends 'company-irony))
 
 	(use-package irony
-	  :defer 1
-	  :ensure t
-	  :config
-	  (add-hook 'c-mode-hook 'irony-mode)
-	  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+		:defer 1
+		:ensure t
+		:config
+		(add-hook 'c-mode-hook 'irony-mode)
+		(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 	(with-eval-after-load 'company
-	  (add-hook 'c-mode-hook 'company-mode))
-   #+END_SRC
-** Idk what to name this
-   Here I put things you can do in M-x or something idk
-   #+BEGIN_SRC emacs-lisp
-	(blink-cursor-mode 0)
-	(global-hl-line-mode 0)
-	(setq-default cursor-type 'box)
-	(blink-cursor-mode 1)
+		(add-hook 'c-mode-hook 'company-mode))
    #+END_SRC
 ** Programming language things
 *** Lisp
@@ -254,17 +252,19 @@
     them.
     #+BEGIN_SRC emacs-lisp
 	 (use-package rainbow-delimiters
-	   :ensure t
-	   :init
-	   (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
-	   (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
-	   (add-hook 'scheme-mode-hook 'rainbow-delimiters-mode))
+		 :ensure t
+		 :init
+		 (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+		 (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
+		 (add-hook 'scheme-mode-hook 'rainbow-delimiters-mode))
 
+	 (setq lisp-indent-offset 5)
     #+END_SRC
 *** Perl
     Cperl-mode is better than perl-mode. You can't change my mind.
     #+BEGIN_SRC emacs-lisp
 	 (defalias 'perl-mode 'cperl-mode)
+	 (setq cperl-indent-level 5)
 
     #+END_SRC
 *** C*
@@ -273,31 +273,36 @@
     to.
     #+BEGIN_SRC emacs-lisp
 	 (use-package c-eldoc
-	   :ensure t
-	   :init
-	   (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode))
+		 :ensure t
+		 :init
+		 (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode))
 	 (setq c-default-style "k&r")
     #+END_SRC
+*** Raku
+    #+begin_src emacs-lisp
+
+
+    #+end_src
 
 ** Extra functions
    Here I put functions I won't bother to document because they're so
    simple.
    #+BEGIN_SRC emacs-lisp
 	(defun git-pushall ()
-	  (interactive)
-	  (shell-command "git pushall"))
+		(interactive)
+		(shell-command "git pushall"))
 
 	(defun kill-inner-word ()
-	  (interactive)
-	  (forward-word 1)
-	  (backward-word)
-	  (kill-word 1))
+		(interactive)
+		(forward-word 1)
+		(backward-word)
+		(kill-word 1))
 	(global-set-key (kbd "C-x w k") 'kill-inner-word)
 	(defun kill-kill ()
-	  (interactive)
-	  (beginning-of-line)
-	  (kill-line)
-	  (kill-line))
+		(interactive)
+		(beginning-of-line)
+		(kill-line)
+		(kill-line))
 	(global-set-key (kbd "M-.") 'repeat)
 	(global-set-key (kbd "C-x k") 'kill-buffer)
 	(global-set-key (kbd "C-c k") 'kill-kill)
@@ -321,36 +326,36 @@
    #+BEGIN_SRC emacs-lisp
 
 	(use-package dired-hide-dotfiles
-	  :ensure t
-	  :init
+		:ensure t
+		:init
 
-	  (defun my-dired-mode-hook ()
-	    "My `dired' mode hook."
-	    ;; To hide dot-files by default
-	    (dired-hide-dotfiles-mode)
+		(defun my-dired-mode-hook ()
+			"My `dired' mode hook."
+			;; To hide dot-files by default
+			(dired-hide-dotfiles-mode)
 
-	    ;; To toggle hiding
-	    (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
+			;; To toggle hiding
+			(define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
 
-	  (add-hook 'dired-mode-hook #'my-dired-mode-hook))
+		(add-hook 'dired-mode-hook #'my-dired-mode-hook))
 
 	(use-package async
-	  :ensure t
-	  :init (dired-async-mode 1))
+		:ensure t
+		:init (dired-async-mode 1))
    #+END_SRC
 ** kill ring popup
    #+BEGIN_SRC emacs-lisp
 	(use-package popup-kill-ring
-	  :ensure t
-	  :bind ("M-y" . popup-kill-ring))
+		:ensure t
+		:bind ("M-y" . popup-kill-ring))
 
    #+END_SRC
 
 ** Dired
    #+BEGIN_SRC emacs-lisp
 	(add-hook 'dired-mode-hook
-			(lambda ()
-			  (dired-hide-details-mode)))
+		(lambda ()
+			(dired-hide-details-mode)))
 
    #+END_SRC
 
@@ -366,8 +371,8 @@
    
    #+BEGIN_SRC emacs-lisp
 	(use-package dired-sidebar
-	  :ensure t
-	  :commands (dired-sidebar-toggle-sidebar))
+		:ensure t
+		:commands (dired-sidebar-toggle-sidebar))
 	(global-set-key (kbd "<f7>") 'dired-sidebar-toggle-sidebar)
    #+END_SRC
 *** Shell
@@ -377,69 +382,75 @@
 	 (add-hook 'shell-mode-hook 'company-mode)
 
 	 (defun shell-mode-company-init ()
-	   (setq-local company-backends '((company-shell
-								company-shell-env
-								company-etags
-								company-dabbrev-code))))
+		 (setq-local company-backends '((company-shell
+									  company-shell-env
+									  company-etags
+									  company-dabbrev-code))))
 
 	 (use-package company-shell
-	   :ensure t
-	   :config
-	   (require 'company)
-	   (add-hook 'shell-mode-hook 'shell-mode-company-init))
+		 :ensure t
+		 :config
+		 (require 'company)
+		 (add-hook 'shell-mode-hook 'shell-mode-company-init))
     #+end_src
 
 ** Mark multiple
    It's like multiple cursors but well done
    #+begin_src emacs-lisp
 	(use-package "multiple-cursors"
-	  :ensure t
-	  :bind ("C-c q" . 'mc/mark-next-like-this))
+		:ensure t
+		:bind ("C-c q" . 'mc/mark-next-like-this))
 
    #+end_src
 
 ** Highlight indent guides
    #+begin_src emacs-lisp
 	(use-package "highlight-indent-guides"
-	  :ensure t
-	  :defer
-	  :init (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-	  (setq highlight-indent-guides-method 'bitmap))
+		:ensure t
+		:defer
+		:init (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+		(setq highlight-indent-guides-method 'bitmap))
    #+end_src
 
 ** Ace jump mode
-
+   So you can jump to characters fast af
    #+begin_src emacs-lisp
 	(use-package "ace-jump-mode"
-	  :ensure t
-	  :bind("C-l" . 'ace-jump-mode))
+		:ensure t
+		:bind("C-l" . 'ace-jump-mode))
    #+end_src
 
+** Expand region
+   #+begin_src emacs-lisp
+	(use-package expand-region
+		:ensure t
+		:bind ("C-c C-e" . 'er/expand-region))
+   #+end_src
 * Helm
   
   fuck helm lol
   #+begin_src emacs-lisp
     (use-package helm
-	 :ensure t
-	 :bind
-	 ("C-x C-f" . 'helm-find-files)
-	 ("C-x C-b" . 'helm-buffers-list)
-	 ("M-x" . 'helm-M-x)
-	 :config
-	 (setq helm-autoresize-max-height 0
-		  helm-autoresize-min-height 40
-		  helm-M-x-fuzzy-match t
-		  helm-buffers-fuzzy-matching t
-		  helm-recentf-fuzzy-match t
-		  helm-semantic-fuzzy-match t
-		  helm-imenu-fuzzy-match t
-		  helm-split-window-in-side-p nil
-		  helm-move-to-line-cycle-in-source nil
-		  helm-ff-search-library-in-sexp t
-		  helm-scroll-amount 8 
-		  helm-echo-input-in-header-line t)
-	 :init
-	 (helm-mode 1))
+	    :ensure t
+	    :bind
+	    ("C-x C-f" . 'helm-find-files)
+	    ("C-x C-b" . 'helm-buffers-list)
+	    ("M-x" . 'helm-M-x)
+	    :config
+	    (setq helm-autoresize-max-height 0
+		    helm-autoresize-min-height 40
+		    helm-M-x-fuzzy-match t
+		    helm-buffers-fuzzy-matching t
+		    helm-recentf-fuzzy-match t
+		    helm-semantic-fuzzy-match t
+		    helm-imenu-fuzzy-match t		
+		    helm-split-window-in-side-p nil
+		    helm-move-to-line-cycle-in-source nil
+		    helm-ff-search-library-in-sexp t
+		    helm-scroll-amount 8 
+		    helm-echo-input-in-header-line t)
+	    :init
+	    (helm-mode 1))
 
     (require 'helm-config)    
     (helm-autoresize-mode 1)
@@ -453,22 +464,23 @@
   own logo instead of Lain.
   #+BEGIN_SRC emacs-lisp
     (use-package dashboard
-	 :ensure t
-	 :init
-	 (dashboard-setup-startup-hook)
-	 (setq dashboard-items '((recents  . 7)
-						(bookmarks . 7)))
-	 (setq dashboard-startup-banner 'logo)
-	 (setq dashboard-banner-logo-title "Welcome to Editor MACroS")
-	 (setq dashboard-startup-banner "~/.emacs.d/img/banner.txt")
-	 (setq dashboard-set-heading-icons t)
-	 (setq dashboard-set-file-icons t))
+	    :ensure t
+	    :init
+	    (dashboard-setup-startup-hook)
+	    (setq dashboard-items '((recents  . 7)
+							  (bookmarks . 7)))
+	    (setq dashboard-startup-banner 'logo)
+	    (setq dashboard-banner-logo-title "Welcome to Editor MACroS")
+	    (setq dashboard-startup-banner "~/.emacs.d/img/banner.txt")
+	    (setq dashboard-set-heading-icons t)
+	    (setq dashboard-set-file-icons t))
   #+END_SRC
 
 * Modeline
   #+begin_src emacs-lisp
     (use-package "telephone-line"
-	 :ensure t
-	 :init (telephone-line-mode 1))
+	    :ensure t
+	    :init (telephone-line-mode 1))
 
   #+end_src
+

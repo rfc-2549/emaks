@@ -10,13 +10,13 @@ This is my Emacs configuration. Hope you like it.
 
 Just copy this repository to your .emacs.d. Nothing else is needed.
 
-**  Why?
-* I can
-* I don't like doom emacs
-* I don't like spacemacs
-* I don't want to learn doom emacs
-* I don't want to learn spacemacs
-* I don't like Vim
+* Why?
+- I can
+- I don't like doom emacs
+- I don't like spacemacs
+- I don't want to learn doom emacs
+- I don't want to learn spacemacs
+- I don't like Vim
 ** About me
 Here I set variables about personal information i'll use later in
 this config.

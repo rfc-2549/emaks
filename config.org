@@ -147,8 +147,9 @@
    #+BEGIN_SRC emacs-lisp
 	(tool-bar-mode -1)
 	(menu-bar-mode -1)
-	(set-frame-font "Terminus 14" nil t)
+	(set-frame-font "Inconsolata 14" 14 t)
 	(global-hl-line-mode)
+	(set-face-background hl-line-face "gray13")
 	(setq-default cursor-type 'box)
 	(blink-cursor-mode 1)
 	(setq-default major-mode 'text-mode)
@@ -191,13 +192,15 @@
 		(add-hook 'raku-mode 'flycheck-raku-mode))
    #+END_SRC
 
-** Shell
+** Terminal
+   vterm is better than ansi-term and shit, despite it's kinda slow,
+   it's a price i'm willing to pay.
+
+   It should use your default shell by default.
    #+BEGIN_SRC emacs-lisp
-	(setq shell "/bin/mksh")
-	(defadvice ansi-term (before force-mksh)
-		(interactive (list shell)))
-	(ad-activate 'ansi-term)
-	(global-set-key (kbd "<C-return>") 'ansi-term)
+	(use-package "vterm"
+		:ensure t
+		:bind("C-x t" . vterm))
    #+END_SRC
 ** Theme
    #+begin_src emacs-lisp
@@ -279,9 +282,10 @@
 	 (setq c-default-style "k&r")
     #+END_SRC
 *** Raku
+    Raku, the cornerstone of any well designed programming language.
     #+begin_src emacs-lisp
-
-
+	 (setq raku-indent-offset 5)
+	 (setq raku-exec-path "/home/qorg/.raku/rakudo-moar-2021.10-01-linux-x86_64-gcc/bin/raku")
     #+end_src
 
 ** Extra functions
@@ -305,11 +309,9 @@
 		(kill-line))
 	(global-set-key (kbd "M-.") 'repeat)
 	(global-set-key (kbd "C-x k") 'kill-buffer)
+	(global-set-key (kbd "C-x C-k") 'kill-current-buffer)
 	(global-set-key (kbd "C-c k") 'kill-kill)
 	(global-set-key (kbd "C-k") 'kill-line)
-
-	(global-set-key (kbd "C-x -") 'comment-region)
-	(global-set-key (kbd "C-x +") 'uncomment-region)
    #+END_SRC
 ** Hunspell
    For some reason, there is no ispell spanish in void linux. so i had
@@ -351,15 +353,21 @@
 
    #+END_SRC
 
-** Dired
+** Dired customization
    #+BEGIN_SRC emacs-lisp
 	(add-hook 'dired-mode-hook
 		(lambda ()
 			(dired-hide-details-mode)))
-
    #+END_SRC
+   Now let's make the thing lysergic
+   #+begin_src emacs-lisp
+	(set-face-foreground dired-directory-face "yellow")
+	(set-face-foreground dired-symlink-face "cyan")
+	(set-face-foreground dired-mark-face "green")
+	(set-face-foreground dired-marked-face "blue")
+   #+end_src
 
-** Scrolling
+** scrolling
    
    #+begin_src emacs-lisp
 	(setq scroll-step 1)
@@ -395,11 +403,11 @@
     #+end_src
 
 ** Mark multiple
-   It's like multiple cursors but well done
+   Multiple cursors :DD
    #+begin_src emacs-lisp
 	(use-package "multiple-cursors"
 		:ensure t
-		:bind ("C-c q" . 'mc/mark-next-like-this))
+		:bind ("C-q" . 'mc/mark-next-like-this))
 
    #+end_src
 
@@ -419,6 +427,13 @@
 		:ensure t
 		:bind("C-l" . 'ace-jump-mode))
    #+end_src
+   And same but jumping between frames
+   #+begin_src emacs-lisp
+	(use-package "ace-window"
+		:ensure t
+		:bind("M-u" . 'ace-window))
+
+   #+end_src
 
 ** Expand region
    #+begin_src emacs-lisp
@@ -426,9 +441,30 @@
 		:ensure t
 		:bind ("C-c C-e" . 'er/expand-region))
    #+end_src
+** Beacon mode
+   #+begin_src emacs-lisp
+	(use-package "beacon"
+		:ensure t
+		:init(beacon-mode 1))
+   #+end_src
+** LSP
+   Le language server
+   #+begin_src emacs-lisp
+	(use-package "lsp-mode"
+		:ensure t
+		)
+	(use-package "lsp-ui"
+		:ensure t
+		:init(add-hook 'lsp-mode-hook 'lsp-ui-mode))
+   #+end_src
+** Workspaces
+   I'm a tilling window manager user, so i know what i'm talking about.
+   #+begin_src emacs-lisp
+	(use-package "workgroups"
+		:ensure t)
+   #+end_src
 * Helm
-  
-  fuck helm lol
+  fuck Ido lol
   #+begin_src emacs-lisp
     (use-package helm
 	    :ensure t

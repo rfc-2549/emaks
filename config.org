@@ -138,14 +138,14 @@ it. I don't think i'd ever use the overwritten.
        :defer 1)
 #+END_SRC
 
-* Customization
+* Programs
 Emacs customization, Here is where most of the configuration is.
 ** Pseudopersonalization
 The basic emacs persdonalization lol
 #+BEGIN_SRC emacs-lisp
   (tool-bar-mode -1)
   (menu-bar-mode -1)
-  (set-frame-font "Inconsolata 14" 14 t)
+  (set-frame-font "Terminus 12" 12 t)
   (global-hl-line-mode)
   (set-face-background hl-line-face "gray13")
   (setq-default cursor-type 'box)
@@ -202,9 +202,9 @@ It should use your default shell by default.
 #+END_SRC
 ** Theme
 #+begin_src emacs-lisp
-  (use-package "darktooth-theme"
+  (use-package alect-themes
        :ensure t
-       :init(load-theme 'darktooth t))
+       :init(load-theme 'alect-black t))
 #+end_src
 ** ctrlf
 #+BEGIN_SRC emacs-lisp
@@ -277,12 +277,34 @@ to.
        :init
        (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode))
   (setq c-default-style "k&r")
+  (add-hook 'c-mode-hook 'lsp-mode)
 #+END_SRC
 *** Raku
 Raku, the cornerstone of any well designed programming language.
 #+begin_src emacs-lisp
   (setq raku-indent-offset 5)
-  (setq raku-exec-path "/home/qorg/.raku/rakudo-moar-2021.10-01-linux-x86_64-gcc/bin/raku")
+  (setq raku-exec-path "/home/qorg/rakudo-star-2021.04/bin/raku") 
+#+end_src
+*** Web shit
+Web programming and its consequences have been a disaster for the
+human race, but it's a necessary evil these days. So here's a little
+configuration for web-mode. Which is an improved shit for editing html documents.
+#+begin_src emacs-lisp
+  (use-package web-mode
+       :ensure t
+       :init
+       (setq web-mode-markup-indent-offset 5)
+       (setq web-mode-indent-style nil)
+       (setq web-mode-css-indent-offset 5)
+       (setq web-mode-code-indent-offset 5)
+       (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+       (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
+       (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+       (add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil))
+       (setq web-mode-enable-current-element-highlight t)
+       (set-face-attribute 'web-mode-html-tag-face nil :foreground "Green3")
+       (set-face-attribute 'web-mode-html-attr-value-face nil :foreground "Orange4")
+       (set-face-attribute 'web-mode-html-attr-name-face nil :foreground "Yellow4"))
 #+end_src
 *** org
 #+begin_src emacs-lisp
@@ -383,7 +405,7 @@ Scroll by lines rather than by pages.
        :commands (dired-sidebar-toggle-sidebar))
   (global-set-key (kbd "<f7>") 'dired-sidebar-toggle-sidebar)
 #+END_SRC
-*** Shell
+** Shell
 #+begin_src emacs-lisp
   (add-hook 'shell-mode-hook 'yas-minor-mode)
   (add-hook 'shell-mode-hook 'flycheck-mode)
@@ -432,8 +454,10 @@ And same but jumping between frames
 #+begin_src emacs-lisp
   (use-package "ace-window"
        :ensure t
-       :bind("M-l" . 'ace-window))
-
+       :bind("M-l" . 'ace-window)
+       :bind("M-o" . 'ace-delete-window))
+  ;; Gotta remove the bad habits
+  (global-unset-key (kbd "C-x o"))
 #+end_src
    
 ** Expand region
@@ -514,6 +538,25 @@ thankfully there's this thing.
        (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
        (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 #+end_src
+** zzz-to-char
+It's like ace-whatever but for zapping characters.
+=zap-to-char=
+#+begin_src emacs-lisp
+  (use-package zzz-to-char
+       :ensure t
+       :bind("M-z" . 'zzz-to-char))
+#+end_src
+** Helpful
+Better \*help\* buffer
+#+begin_src emacs-lisp
+  (use-package helpful
+       :ensure t
+       :bind ("C-h f". #'helpful-callable)
+       :bind ("C-h v". #'helpful-variable)
+       :bind ("C-h k". #'helpful-key))
+
+#+end_src
+
 * Helm
 fuck Ido lol
 #+begin_src emacs-lisp
@@ -565,10 +608,9 @@ own logo instead of Lain.
 
 * Modeline
 #+begin_src emacs-lisp
-  (use-package "telephone-line"
+  (use-package "doom-modeline"
        :ensure t
-       :init (telephone-line-mode 1))
-
+       :init (doom-modeline-mode 1))
 #+end_src
 
 

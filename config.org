@@ -133,12 +133,6 @@ it. I don't think i'd ever use the overwritten.
        :ensure t
        :defer 1)
 #+END_SRC
-* Functions
-Too lazy for lambdas
-#+begin_src emacs-lisp
-  (defun no-lines()
-       (display-line-numbers-mode -1))
-#+end_src
 * Programs
 Emacs customization, Here is where most of the configuration is.
 ** Pseudopersonalization
@@ -349,22 +343,23 @@ simple.
   (defun git-pushall ()
        (interactive)
        (shell-command "git pushall"))
-
+  (defun no-lines()
+       (display-line-numbers-mode -1))
   (defun kill-inner-word ()
        (interactive)
        (forward-word 1)
        (backward-word)
        (kill-word 1))
   (global-set-key (kbd "C-x w k") 'kill-inner-word)
-  (defun kill-kill ()
+  (defun kill-word-good ()
        (interactive)
-       (beginning-of-line)
-       (kill-line)
-       (kill-line))
+       (backward-word 1)
+       (kill-word 1))
+  (global-set-key (kbd "M-d") 'kill-word-good)
+
   (global-set-key (kbd "M-.") 'repeat)
   (global-set-key (kbd "C-x k") 'kill-buffer)
   (global-set-key (kbd "C-x C-k") 'kill-current-buffer)
-  (global-set-key (kbd "C-c k") 'kill-kill)
   (global-set-key (kbd "C-k") 'kill-line)
 #+END_SRC
 ** Hunspell

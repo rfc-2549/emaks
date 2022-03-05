@@ -7,9 +7,7 @@
 This is my Emacs configuration. Hope you like it.
 
 ** Installation
-
 Just copy this repository to your .emacs.d. Nothing else is needed.
-
 * Why?
 - I can
 - I don't like doom emacs
@@ -114,6 +112,7 @@ Probably this overwrites another keybinding. But since I overwrited
 it. I don't think i'd ever use the overwritten.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-m") 'mark-whole-buffer)
+  (global-set-key (kbd "C-c m") 'man)
 #+END_SRC
   
 * No idea
@@ -134,6 +133,12 @@ it. I don't think i'd ever use the overwritten.
        :ensure t
        :defer 1)
 #+END_SRC
+* Functions
+Too lazy for lambdas
+#+begin_src emacs-lisp
+  (defun no-lines()
+       (display-line-numbers-mode -1))
+#+end_src
 * Programs
 Emacs customization, Here is where most of the configuration is.
 ** Pseudopersonalization
@@ -327,6 +332,7 @@ Now for indent shit, so it matches the tabsize
   (setq org-export-with-smart-quotes t)
   (setq org-src-window-setup 'current-window)
   (add-hook 'org-mode-hook 'org-indent-mode)
+  (add-hook 'org-mode-hook 'no-lines) 
   ;; Syntax highlighting in exports
   (use-package htmlize
        :ensure t)
@@ -524,6 +530,8 @@ I am tired of =M-x auto-fill-mode= in some modes
   (add-hook 'text-mode-hook 'auto-fill-mode)
   (add-hook 'sgml-mode-hook 'auto-fill-mode)
   (add-hook 'sgml-mode-hook 'zencoding-mode)
+  (add-hook 'Man-mode-hook 'no-lines)
+  (add-hook 'speedbar-mode-hook 'no-lines)
 #+end_src
 ** Hungry delete
 Having to delete multiple whitespaces is one of the things I hate,
@@ -565,7 +573,7 @@ It's like ace-whatever but for zapping characters.
 #+begin_src emacs-lisp
   (use-package zzz-to-char
        :ensure t
-       :bind("M-z" . 'zzz-to-char))
+       :bind("M-z" . 'zzz-up-to-char))
 #+end_src
 ** Helpful
 Better \*help\* buffer

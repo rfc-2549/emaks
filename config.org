@@ -151,6 +151,7 @@ The basic emacs persdonalization lol
   (set-cursor-color "purple")
   (set-face-background 'line-number "gray3")
   (set-face-background 'line-number-current-line "gray13")
+  (setq-default Man-notify-method 'pushy)
 #+END_SRC
 ** Highlight matching parentheses
 #+BEGIN_SRC emacs-lisp

@@ -3,7 +3,6 @@
 
 * qorg's Emacs config
   
-  
 This is my Emacs configuration. Hope you like it.
 
 ** Installation
@@ -204,9 +203,8 @@ It should use your default shell by default.
   (use-package alect-themes
        :ensure t
        :init(load-theme 'alect-black t))
-  (set-face-attribute 'default nil :font "Terminus 14" )
-  (set-frame-font "Terminus 14")
-
+  (set-face-attribute 'default nil :font "IBM Plex Mono 12")
+  (set-frame-font "IBM Plex Mono 12")
 #+end_src
 ** ctrlf
 So, you know, C-s in emacs sucks, so this is a repleacement for that.
@@ -347,16 +345,10 @@ simple.
        (display-line-numbers-mode -1))
   (defun kill-inner-word ()
        (interactive)
-       (forward-word 1)
+       (forward-char 1)
        (backward-word)
-       (kill-word 1))
-  (global-set-key (kbd "C-x w k") 'kill-inner-word)
-  (defun kill-word-good ()
-       (interactive)
-       (backward-word 1)
-       (kill-word 1))
-  (global-set-key (kbd "M-d") 'kill-word-good)
-
+       (kill-word 1)))
+  (global-set-key (kbd "M-d") 'kill-inner-word)
   (global-set-key (kbd "M-.") 'repeat)
   (global-set-key (kbd "C-x k") 'kill-buffer)
   (global-set-key (kbd "C-x C-k") 'kill-current-buffer)
@@ -448,7 +440,7 @@ Multiple cursors :DD
 #+begin_src emacs-lisp
   (use-package "multiple-cursors"
        :ensure t
-       :bind ("C-q" . 'mc/mark-next-like-this))
+       :bind ("C-c q" . 'mc/mark-next-like-this))
 
 #+end_src
 
@@ -477,13 +469,13 @@ And same but jumping between frames
   ;; Gotta remove the bad habits
   (global-unset-key (kbd "C-x o"))
 #+end_src
-   
+
 ** Expand region
 #+begin_src emacs-lisp
   (use-package expand-region
        :ensure t
-       :init(global-unset-key (kbd "C-c C-q"))
-       (global-set-key (kbd"C-c C-q") 'er/expand-region))
+       :init(global-unset-key (kbd "C-q"))
+       (global-set-key (kbd"C-q") 'er/expand-region))
 #+end_src
 ** Beacon mode
 #+begin_src emacs-lisp
@@ -626,9 +618,22 @@ This thing add sane shortcuts for emacs
        :bind("C-c s" . 'crux-create-scratch-buffer))
 #+end_src
 * Dashboard
-Dashboard. You can change
-~/.emacs.d/img/logo.png
-own logo instead of Lain.
+The dashboard is a good index for your things. So it's useful to have
+it
+
+Here is an useful function I wrote so you can go to the dashboard (Or
+create it in case you accidentally killed the buffer)
+
+#+begin_src emacs-lisp
+  (defun goto-dashboard ()
+       (interactive)
+       (switch-to-buffer "*dashboard*")
+       ;; In case it doesn't exist.
+       (dashboard-mode))
+
+  (global-set-key (kbd "C-c C-d") 'goto-dashboard)
+#+end_src
+
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
        :ensure t

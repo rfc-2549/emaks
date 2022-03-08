@@ -48,8 +48,8 @@ Yeah, this configuration file has a configuration, ironic ha?
 
   ;; Lower threshold back to 8 MiB (default is 800kB)
   (add-hook 'emacs-startup-hook
-       (lambda ()
-            (setq gc-cons-threshold (expt 2 23))))
+	  (lambda ()
+		  (setq gc-cons-threshold (expt 2 23))))
 #+end_src
 * melpa crap, and basic packages installation
 melpa, where you get the packages. This also installs use-package,
@@ -57,20 +57,20 @@ and other packages I use.
 #+BEGIN_SRC emacs-lisp
   (require 'package)
   (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                      (not (gnutls-available-p))))
-             (proto (if no-ssl "http" "https")))
-       ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-       (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-       ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-       (when (< emacs-major-version 24)
-            ;; For important compatibility libraries like cl-lib
-            (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+				  (not (gnutls-available-p))))
+		   (proto (if no-ssl "http" "https")))
+	  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+	  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+	  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+	  (when (< emacs-major-version 24)
+		  ;; For important compatibility libraries like cl-lib
+		  (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
 
   (if (< emacs-major-version 27)
-       (package-initialize))
+	  (package-initialize))
   (unless (package-installed-p 'use-package)
-       (package-refresh-contents)
-       (package-install 'use-package))
+	  (package-refresh-contents)
+	  (package-install 'use-package))
 #+END_SRC
 ** Generic packages
 Here I install some packages that don't need configuration.
@@ -79,15 +79,15 @@ init to install the fonts.
 #+BEGIN_SRC emacs-lisp
 
   (use-package markdown-mode
-       :defer 1
-       :ensure t
-       :init(add-hook 'markdown-mode-hook 'auto-fill-mode))
+	  :defer 1
+	  :ensure t
+	  :init(add-hook 'markdown-mode-hook 'auto-fill-mode))
   (use-package all-the-icons
-       :defer 1
-       :ensure t)
+	  :defer 1
+	  :ensure t)
   (use-package which-key
-       :ensure t
-       :init (which-key-mode))
+	  :ensure t
+	  :init (which-key-mode))
 #+END_SRC
 * Autoindentation
 C-c n for indent-buffer. I don't use the rest.
@@ -95,12 +95,12 @@ C-c n for indent-buffer. I don't use the rest.
   (setq-default tab-width 5)
   (defvaralias 'sgml-basic-offset 'tab-width)
   (add-hook 'html-mode-hook
-       (lambda ()
-            (set-fill-column 100)))
+	  (lambda ()
+		  (set-fill-column 100)))
   (defun indent-buffer ()
-       (interactive)
-       (save-excursion
-            (indent-region (point-min) (point-max) nil)))
+	  (interactive)
+	  (save-excursion
+		  (indent-region (point-min) (point-max) nil)))
   (global-set-key (kbd "C-c n") 'indent-buffer)
   ;; C bullshit
   (c-set-offset 'arglist-cont-nonempty '+)
@@ -121,16 +121,16 @@ it. I don't think i'd ever use the overwritten.
   (setq auto-save-default nil) ; stop creating #autosave# files
   (put 'upcase-region 'disabled nil)
   (defun contextual-menubar (&optional frame)
-       "Display the menubar in FRAME (default: selected frame) if on a
+	  "Display the menubar in FRAME (default: selected frame) if on a
   graphical display, but hide it if in terminal."
-       (interactive)
-       (set-frame-parameter frame 'menu-bar-lines
-            (if (display-graphic-p frame)
-                 1 0)))
+	  (interactive)
+	  (set-frame-parameter frame 'menu-bar-lines
+		  (if (display-graphic-p frame)
+			  1 0)))
   (add-hook 'after-make-frame-functions 'contextual-menubar)
   (use-package zencoding-mode
-       :ensure t
-       :defer 1)
+	  :ensure t
+	  :defer 1)
 #+END_SRC
 * Programs
 Emacs customization, Here is where most of the configuration is.
@@ -140,15 +140,15 @@ The basic emacs persdonalization lol
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (global-hl-line-mode)
-  (set-face-background hl-line-face "gray13")
+  (set-face-background hl-line-face "blue12")
   (setq-default cursor-type 'box)
   (blink-cursor-mode 1)
   (setq-default major-mode 'text-mode)
   (defalias 'yes-or-no-p 'y-or-n-p)
   ;; Are you experienced?
   (set-cursor-color "purple")
-  (set-face-background 'line-number "gray3")
-  (set-face-background 'line-number-current-line "gray13")
+  (set-face-background 'line-number nil)
+  (set-face-background 'line-number-current-line nil)
   (setq-default Man-notify-method 'pushy)
 #+END_SRC
 ** Highlight matching parentheses
@@ -176,16 +176,16 @@ The basic emacs persdonalization lol
 Flycheck is a syntax validator or somehting like that
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
-       :ensure t
-       :init
-       (add-hook 'after-init-hook #'global-flycheck-mode))
+	  :ensure t
+	  :init
+	  (add-hook 'after-init-hook #'global-flycheck-mode))
 #+END_SRC
 And for raku
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck-raku
-       :ensure t
-       :init
-       (add-hook 'raku-mode 'flycheck-raku-mode))
+	  :ensure t
+	  :init
+	  (add-hook 'raku-mode 'flycheck-raku-mode))
 #+END_SRC
 
 ** Terminal
@@ -195,58 +195,58 @@ it's a price i'm willing to pay.
 It should use your default shell by default.
 #+BEGIN_SRC emacs-lisp
   (use-package "vterm"
-       :ensure t
-       :bind("C-x t" . vterm))
+	  :ensure t
+	  :bind("C-x t" . vterm))
 #+END_SRC
 ** Theme
 #+begin_src emacs-lisp
-  (use-package alect-themes
-       :ensure t
-       :init(load-theme 'alect-black t))
+  (use-package base16-theme
+	  :ensure t
+	  :init(load-theme 'base16-harmonic-dark t))
   (set-face-attribute 'default nil :font "IBM Plex Mono 12")
-  (set-frame-font "IBM Plex Mono 12")
+  (set-frame-font "Inconsolata 14")
 #+end_src
 ** ctrlf
 So, you know, C-s in emacs sucks, so this is a repleacement for that.
 #+BEGIN_SRC emacs-lisp
   (use-package ctrlf
-       :ensure t
-       :defer 1
-       :init
-       (ctrlf-mode +1))
+	  :ensure t
+	  :defer 1
+	  :init
+	  (ctrlf-mode +1))
 #+END_SRC
 ** Company and Irony
 Some shit for autocompletion and that kind of shit.
 
 #+BEGIN_SRC emacs-lisp
   (use-package company
-       :defer 1
-       :ensure t
-       :config
-       (setq company-idle-delay 0)
-       (setq company-minimum-prefix-length 3)
-       (global-company-mode))
+	  :defer 1
+	  :ensure t
+	  :config
+	  (setq company-idle-delay 0)
+	  (setq company-minimum-prefix-length 3)
+	  (global-company-mode))
   (with-eval-after-load 'company
-       (define-key company-active-map (kbd "M-n") nil)
-       (define-key company-active-map (kbd "M-p") nil)
-       (define-key company-active-map (kbd "C-n") #'company-select-next)
-       (define-key company-active-map (kbd "C-p") #'company-select-previous))
+	  (define-key company-active-map (kbd "M-n") nil)
+	  (define-key company-active-map (kbd "M-p") nil)
+	  (define-key company-active-map (kbd "C-n") #'company-select-next)
+	  (define-key company-active-map (kbd "C-p") #'company-select-previous))
 
   (use-package company-irony
-       :defer 1
-       :ensure t
-       :config
-       (require 'company)
-       (add-to-list 'company-backends 'company-irony))
+	  :defer 1
+	  :ensure t
+	  :config
+	  (require 'company)
+	  (add-to-list 'company-backends 'company-irony))
 
   (use-package irony
-       :defer 1
-       :ensure t
-       :config
-       (add-hook 'c-mode-hook 'irony-mode)
-       (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+	  :defer 1
+	  :ensure t
+	  :config
+	  (add-hook 'c-mode-hook 'irony-mode)
+	  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
   (with-eval-after-load 'company
-       (add-hook 'c-mode-hook 'company-mode))
+	  (add-hook 'c-mode-hook 'company-mode))
 #+END_SRC
 ** Programming language things
 *** Lisp
@@ -254,11 +254,11 @@ Parentheses highlight in lisp modes. So you can easily identify
 them.
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
-       :ensure t
-       :init
-       (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
-       (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
-       (add-hook 'scheme-mode-hook 'rainbow-delimiters-mode))
+	  :ensure t
+	  :init
+	  (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+	  (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
+	  (add-hook 'scheme-mode-hook 'rainbow-delimiters-mode))
 
   (setq lisp-indent-offset 5)
 #+END_SRC
@@ -274,13 +274,13 @@ minibuffer. Which is very useful since Irony works when it wants
 to.
 #+BEGIN_SRC emacs-lisp
   (use-package c-eldoc
-       :ensure t
-       :init
-       (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode))
+	  :ensure t
+	  :init
+	  (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode))
   (setq c-default-style "k&r")
   (add-hook 'c-mode-hook '(lambda ()
-                               (lsp 1)
-                               (flycheck-select-checker 'c/c++-clang)))
+						 (lsp 1)
+						 (flycheck-select-checker 'c/c++-clang)))
   (setq c-mode-hook nil)
 #+END_SRC
 *** Raku
@@ -295,20 +295,20 @@ human race, but it's a necessary evil these days. So here's a little
 configuration for web-mode. Which is an improved shit for editing html documents.
 #+begin_src emacs-lisp
   (use-package web-mode
-       :ensure t
-       :init
-       (setq web-mode-markup-indent-offset 5)
-       (setq web-mode-indent-style nil)
-       (setq web-mode-css-indent-offset 5)
-       (setq web-mode-code-indent-offset 5)
-       (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
-       (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
-       (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
-       (add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil))
-       (setq web-mode-enable-current-element-highlight t)
-       (set-face-attribute 'web-mode-html-tag-face nil :foreground "Green3")
-       (set-face-attribute 'web-mode-html-attr-value-face nil :foreground "Orange4")
-       (set-face-attribute 'web-mode-html-attr-name-face nil :foreground "Yellow4"))
+	  :ensure t
+	  :init
+	  (setq web-mode-markup-indent-offset 5)
+	  (setq web-mode-indent-style nil)
+	  (setq web-mode-css-indent-offset 5)
+	  (setq web-mode-code-indent-offset 5)
+	  (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+	  (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
+	  (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+	  (add-to-list 'web-mode-indentation-params '("lineup-ternary" . nil))
+	  (setq web-mode-enable-current-element-highlight t)
+	  (set-face-attribute 'web-mode-html-tag-face nil :foreground "Green3")
+	  (set-face-attribute 'web-mode-html-attr-value-face nil :foreground "Orange4")
+	  (set-face-attribute 'web-mode-html-attr-name-face nil :foreground "Yellow4"))
 #+end_src
 Now for indent shit, so it matches the tabsize
 #+begin_src emacs-lisp
@@ -327,7 +327,7 @@ Now for indent shit, so it matches the tabsize
   (add-hook 'org-mode-hook 'no-lines) 
   ;; Syntax highlighting in exports
   (use-package htmlize
-       :ensure t)
+	  :ensure t)
 #+end_src
 **** Org-agenda
 >Le attention deficit destroyer
@@ -339,15 +339,15 @@ Here I put functions I won't bother to document because they're so
 simple.
 #+BEGIN_SRC emacs-lisp
   (defun git-pushall ()
-       (interactive)
-       (shell-command "git pushall"))
+	  (interactive)
+	  (shell-command "git pushall"))
   (defun no-lines()
-       (display-line-numbers-mode -1))
+	  (display-line-numbers-mode -1))
   (defun kill-inner-word ()
-       (interactive)
-       (forward-char 1)
-       (backward-word)
-       (kill-word 1)))
+	  (interactive)
+	  (forward-char 1)
+	  (backward-word)
+	  (kill-word 1))
   (global-set-key (kbd "M-d") 'kill-inner-word)
   (global-set-key (kbd "M-.") 'repeat)
   (global-set-key (kbd "C-x k") 'kill-buffer)
@@ -368,23 +368,23 @@ Hide dotfiles:
 #+BEGIN_SRC emacs-lisp
 
   (use-package dired-hide-dotfiles
-       :ensure t
-       :init
-       (defun my-dired-mode-hook ()
-            "My `dired' mode hook."
-            ;; To hide dot-files by default
-            (dired-hide-dotfiles-mode)
+	  :ensure t
+	  :init
+	  (defun my-dired-mode-hook ()
+		  "My `dired' mode hook."
+		  ;; To hide dot-files by default
+		  (dired-hide-dotfiles-mode)
 
-            ;; To toggle hiding
-            (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
+		  ;; To toggle hiding
+		  (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
 
-       (add-hook 'dired-mode-hook #'my-dired-mode-hook))
+	  (add-hook 'dired-mode-hook #'my-dired-mode-hook))
   (use-package async
-       :ensure t
-       :init (dired-async-mode 1))
+	  :ensure t
+	  :init (dired-async-mode 1))
   (add-hook 'dired-mode-hook
-       (lambda ()
-            (dired-hide-details-mode)))
+	  (lambda ()
+		  (dired-hide-details-mode)))
 #+END_SRC
 Now let's make the thing lysergic
 #+begin_src emacs-lisp
@@ -396,8 +396,8 @@ Now let's make the thing lysergic
 ** kill ring popup
 #+BEGIN_SRC emacs-lisp
   (use-package popup-kill-ring
-       :ensure t
-       :bind ("M-y" . popup-kill-ring))
+	  :ensure t
+	  :bind ("M-y" . popup-kill-ring))
 
 #+END_SRC
 
@@ -412,8 +412,8 @@ Scroll by lines rather than by pages.
 ** Sidebar
 #+BEGIN_SRC emacs-lisp
   (use-package dired-sidebar
-       :ensure t
-       :commands (dired-sidebar-toggle-sidebar))
+	  :ensure t
+	  :commands (dired-sidebar-toggle-sidebar))
   (global-set-key (kbd "<f7>") 'dired-sidebar-toggle-sidebar)
 #+END_SRC
 ** Shell
@@ -423,24 +423,24 @@ Scroll by lines rather than by pages.
   (add-hook 'shell-mode-hook 'company-mode)
 
   (defun shell-mode-company-init ()
-       (setq-local company-backends '((company-shell
-                                           company-shell-env
-                                           company-etags
-                                           company-dabbrev-code))))
+	  (setq-local company-backends '((company-shell
+								   company-shell-env
+								   company-etags
+								   company-dabbrev-code))))
 
   (use-package company-shell
-       :ensure t
-       :config
-       (require 'company)
-       (add-hook 'shell-mode-hook 'shell-mode-company-init))
+	  :ensure t
+	  :config
+	  (require 'company)
+	  (add-hook 'shell-mode-hook 'shell-mode-company-init))
 #+end_src
 
 ** Mark multiple
 Multiple cursors :DD
 #+begin_src emacs-lisp
   (use-package "multiple-cursors"
-       :ensure t
-       :bind ("C-c q" . 'mc/mark-next-like-this))
+	  :ensure t
+	  :bind ("C-c q" . 'mc/mark-next-like-this))
 
 #+end_src
 
@@ -448,24 +448,24 @@ Multiple cursors :DD
 I don't really know, it looks cool.
 #+begin_src emacs-lisp
   (use-package "highlight-indent-guides"
-       :ensure t
-       :defer
-       :init (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-       (setq highlight-indent-guides-method 'bitmap))
+	  :ensure t
+	  :defer
+	  :init (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+	  (setq highlight-indent-guides-method 'bitmap))
 #+end_src
 ** Ace jump mode
 So you can jump to characters fast af
 #+begin_src emacs-lisp
   (use-package "ace-jump-mode"
-       :ensure t
-       :bind("C-l" . 'ace-jump-mode))
+	  :ensure t
+	  :bind("C-l" . 'ace-jump-mode))
 #+end_src
 And same but jumping between frames
 #+begin_src emacs-lisp
   (use-package "ace-window"
-       :ensure t
-       :bind("M-l" . 'ace-window)
-       :bind("M-o" . 'ace-delete-window))
+	  :ensure t
+	  :bind("M-l" . 'ace-window)
+	  :bind("M-o" . 'ace-delete-window))
   ;; Gotta remove the bad habits
   (global-unset-key (kbd "C-x o"))
 #+end_src
@@ -473,40 +473,40 @@ And same but jumping between frames
 ** Expand region
 #+begin_src emacs-lisp
   (use-package expand-region
-       :ensure t
-       :init(global-unset-key (kbd "C-q"))
-       (global-set-key (kbd"C-q") 'er/expand-region))
+	  :ensure t
+	  :init(global-unset-key (kbd "C-q"))
+	  (global-set-key (kbd"C-q") 'er/expand-region))
 #+end_src
 ** Beacon mode
 #+begin_src emacs-lisp
   (use-package "beacon"
-       :ensure t
-       :init(beacon-mode 1))
+	  :ensure t
+	  :init(beacon-mode 1))
 #+end_src
 ** LSP
 Le language server
 #+begin_src emacs-lisp
   (use-package "lsp-mode"
-       :ensure t
-       )
+	  :ensure t
+	  )
   (use-package "lsp-ui"
-       :ensure t
-       :init(add-hook 'lsp-mode-hook 'lsp-ui-mode))
+	  :ensure t
+	  :init(add-hook 'lsp-mode-hook 'lsp-ui-mode))
 #+end_src
 ** Workspaces
 I'm a tilling window manager user, so i know what i'm talking about.
 #+begin_src emacs-lisp
   (use-package "workgroups"
-       :ensure t
-       :init(workgroups-mode))
+	  :ensure t
+	  :init(workgroups-mode))
 #+end_src
 ** Buffers
 Well, you know sometimes you just want to change to the previous
 buffer and don't want a whole interface for just pressing enter.
 #+begin_src emacs-lisp
   (defun switch-to-previous-buffer ()
-       (interactive)
-       (switch-to-buffer (other-buffer (current-buffer) 1)))
+	  (interactive)
+	  (switch-to-buffer (other-buffer (current-buffer) 1)))
 
   (global-set-key (kbd "C-x C-b") 'switch-to-previous-buffer)
 #+end_src
@@ -525,51 +525,51 @@ Having to delete multiple whitespaces is one of the things I hate,
 thankfully there's this thing.
 #+begin_src emacs-lisp
   (use-package "hungry-delete"
-       :ensure t
-       :init(global-hungry-delete-mode))
+	  :ensure t
+	  :init(global-hungry-delete-mode))
 #+end_src
 ** Yasnippet
 #+begin_src emacs-lisp
   (use-package "yasnippet"
-       :ensure t
-       :config
-       (use-package "yasnippet-snippets"
-            :ensure t)
-       (yas-reload-all))
+	  :ensure t
+	  :config
+	  (use-package "yasnippet-snippets"
+		  :ensure t)
+	  (yas-reload-all))
 #+end_src
 ** Org-mode customization
 #+begin_src emacs-lisp
   (use-package "org-bullets"
-       :ensure t
-       :config
-       (add-hook 'org-mode-hook 'org-bullets-mode))
+	  :ensure t
+	  :config
+	  (add-hook 'org-mode-hook 'org-bullets-mode))
   (local-unset-key (kbd"C-c C-q"))
 #+end_src
 ** diff-hl
 #+begin_src emacs-lisp
   (use-package "diff-hl"
-       :ensure t
-       :config
-       (global-diff-hl-mode)
-       (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-       (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+	  :ensure t
+	  :config
+	  (global-diff-hl-mode)
+	  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+	  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 #+end_src
 ** zzz-to-char
 It's like ace-whatever but for zapping characters.
 =zap-to-char=
 #+begin_src emacs-lisp
   (use-package zzz-to-char
-       :ensure t
-       :bind("M-z" . 'zzz-up-to-char))
+	  :ensure t
+	  :bind("M-z" . 'zzz-up-to-char))
 #+end_src
 ** Helpful
 Better \*help\* buffer
 #+begin_src emacs-lisp
   (use-package helpful
-       :ensure t
-       :bind ("C-h f". #'helpful-callable)
-       :bind ("C-h v". #'helpful-variable)
-       :bind ("C-h k". #'helpful-key))
+	  :ensure t
+	  :bind ("C-h f". #'helpful-callable)
+	  :bind ("C-h v". #'helpful-variable)
+	  :bind ("C-h k". #'helpful-key))
 
 #+end_src
 
@@ -598,7 +598,7 @@ fuck Ido lol
        :init
        (helm-mode 1))
 
-  (require 'helm-config)    
+  (require 'helm-config)	 
   (helm-autoresize-mode 1)
   (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
   (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
@@ -608,14 +608,14 @@ fuck Ido lol
 This thing add sane shortcuts for emacs
 #+begin_src emacs-lisp
   (use-package "crux"
-       :ensure t
-       :bind("C-k" . 'crux-smart-kill-line)
-       :bind("C-c o" . 'crux-open-with)
-       :bind("C-c D" . 'crux-delete-buffer-and-file)
-       :bind("C-x C-r" . 'crux-reopen-as-root)
-       :bind("C-x C-d" . 'crux-duplicate-current-line-or-region)
-       :bind("C-c u" . 'crux-view-url)
-       :bind("C-c s" . 'crux-create-scratch-buffer))
+	  :ensure t
+	  :bind("C-k" . 'crux-smart-kill-line)
+	  :bind("C-c o" . 'crux-open-with)
+	  :bind("C-c D" . 'crux-delete-buffer-and-file)
+	  :bind("C-x C-r" . 'crux-reopen-as-root)
+	  :bind("C-x C-d" . 'crux-duplicate-current-line-or-region)
+	  :bind("C-c u" . 'crux-view-url)
+	  :bind("C-c s" . 'crux-create-scratch-buffer))
 #+end_src
 * Dashboard
 The dashboard is a good index for your things. So it's useful to have
@@ -626,39 +626,40 @@ create it in case you accidentally killed the buffer)
 
 #+begin_src emacs-lisp
   (defun goto-dashboard ()
-       (interactive)
-       (switch-to-buffer "*dashboard*")
-       ;; In case it doesn't exist.
-       (dashboard-mode))
+	  (interactive)
+	  (switch-to-buffer "*dashboard*")
+	  ;; In case it doesn't exist.
+	  (dashboard-mode))
 
   (global-set-key (kbd "C-c C-d") 'goto-dashboard)
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
-       :ensure t
-       :init
-       (dashboard-setup-startup-hook)
-       (setq dashboard-items '(
-                                   (recents  . 7)
-                                   (bookmarks . 7)
-                                   (agenda . 7)))
-       (setq dashboard-startup-banner 'logo)
-       (setq dashboard-banner-logo-title "Welcome to Editor MACroS")
-       (setq dashboard-startup-banner "~/.emacs.d/img/banner.png")
-       (setq dashboard-set-heading-icons t)
-       (setq dashboard-set-file-icons t))
+	  :ensure t
+	  :init
+	  (dashboard-setup-startup-hook)
+	  (setq dashboard-items '(
+							(recents	. 7)
+							(bookmarks . 7)
+							(agenda . 7)))
+	  (setq dashboard-startup-banner 'logo)
+	  (setq dashboard-banner-logo-title "Welcome to Editor MACroS")
+	  (setq dashboard-startup-banner "~/.emacs.d/img/banner.png")
+	  (setq dashboard-set-heading-icons t)
+	  (setq dashboard-set-file-icons t))
 #+END_SRC
 
 * Modeline
 #+begin_src emacs-lisp
   (use-package "doom-modeline"
-       :ensure t
-       :config
-       (setq doom-modeline-lsp t)
-       (setq doom-modeline-indent-info t)
-       (setq doom-modeline-buffer-encoding t)
-       :init (doom-modeline-mode 1))
+	  :ensure t
+	  :config
+	  (setq doom-modeline-lsp t)
+	  (setq doom-modeline-indent-info t)
+	  (setq doom-modeline-buffer-encoding t)
+	  :init (doom-modeline-mode 1))
 #+end_src
+
 
 

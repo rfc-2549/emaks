@@ -1,7 +1,6 @@
-#+AUTHOR: qorg11
 #+TITLE: emacs config
 
-* qorg's Emacs config
+* suragu's Emacs config
   
 This is my Emacs configuration. Hope you like it.
 
@@ -14,33 +13,7 @@ Just copy this repository to your .emacs.d. Nothing else is needed.
 - I don't want to learn doom emacs
 - I don't want to learn spacemacs
 - I don't like Vim
-** About me
-Here I set variables about personal information i'll use later in
-this config.
-#+BEGIN_SRC emacs-lisp
-  (setq name "qorg11")
-  (setq email "qorg@vxempire.xyz")
-  (setq website "qorg11.net")
-#+END_SRC
-** Dependencies
-The only no emacs related dependence in this configuration is the
-IBM Plex Mono font. Install it from your distribution packages.
-You can change it before opening Emacs with this configuration for
-the first time.
 
-For irony-mode (C autocompletion) irony-sever must be
-installed. You can install it with M-x irony-install-server or via
-distribution's packages, in Debian case, apt install irony-server.
-Using M-x irony-install-server requires cmake and a lot of
-dependences I'm to lazy to install.
-
-** Configuration
-Yeah, this configuration file has a configuration, ironic ha?
-#+BEGIN_SRC emacs-lisp
-  (setq i-just-use-emacs-to-be-cool nil) ;; Repleace to true to use EVIL
-
-#+END_SRC
-   
 * gc
 #+begin_src emacs-lisp
   ;; Minimize garbage collection during startup
@@ -112,6 +85,7 @@ it. I don't think i'd ever use the overwritten.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-m") 'mark-whole-buffer)
   (global-set-key (kbd "C-c m") 'man)
+  (define-key org-mode-map (kbd "C-c p") 'org-publish-current-file)
 #+END_SRC
   
 * No idea
@@ -161,6 +135,21 @@ Functions I wrote because emacs lisp is cool and useful.
        (switch-to-buffer "*dashboard*")
        (dashboard-mode)
        (dashboard-refresh-buffer))
+
+  (setq org-publish-project-alist
+     '(("suragu.net"
+            :base-directory "~/docs/qorg_qorg/"
+            :publishing-directory "~/docs/mounts/sites/suragu.net"
+            :section-numbers nil
+            :publishing-function org-html-publish-to-html
+            :table-of-contents nil
+            :recursive t
+            )))
+
+(defun make-website ()
+     (interactive)
+     (org-publish "suragu.net"))
+
 #+end_src
 * Programs
 Emacs customization, Here is where most of the configuration is.
@@ -171,7 +160,7 @@ The basic emacs persdonalization lol
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (global-hl-line-mode)
-  (set-face-background hl-line-face "blue12")
+  (set-face-background hl-line-face "gray20")
   (setq-default cursor-type 'box)
   (blink-cursor-mode 1)
   (setq-default major-mode 'text-mode)
@@ -231,9 +220,7 @@ It should use your default shell by default.
 #+END_SRC
 ** Theme
 #+begin_src emacs-lisp
-  (use-package base16-theme
-       :ensure t
-       :init(load-theme 'base16-irblack t))
+(load-theme 'misterioso t)
 
   (set-cursor-color "purple")
 #+end_src
@@ -255,29 +242,13 @@ Some shit for autocompletion and that kind of shit.
        :ensure t
        :config
        (setq company-idle-delay 0)
-       (setq company-minimum-prefix-length 3)
+       (setq company-minimum-prefix-length 1)
        (global-company-mode))
   (with-eval-after-load 'company
        (define-key company-active-map (kbd "M-n") nil)
        (define-key company-active-map (kbd "M-p") nil)
        (define-key company-active-map (kbd "C-n") #'company-select-next)
        (define-key company-active-map (kbd "C-p") #'company-select-previous))
-
-  (use-package company-irony
-       :defer 1
-       :ensure t
-       :config
-       (require 'company)
-       (add-to-list 'company-backends 'company-irony))
-
-  (use-package irony
-       :defer 1
-       :ensure t
-       :config
-       (add-hook 'c-mode-hook 'irony-mode)
-       (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-  (with-eval-after-load 'company
-       (add-hook 'c-mode-hook 'company-mode))
 #+END_SRC
 ** Programming language things
 *** Lisp
@@ -294,10 +265,12 @@ them.
   (setq lisp-indent-offset 5)
 #+END_SRC
 *** Perl
-Cperl-mode is better than perl-mode. You can't change my mind.
+I use LSP for perl.
 #+BEGIN_SRC emacs-lisp
-  (defalias 'perl-mode 'cperl-mode)
-  (setq cperl-indent-level 5)
+  (setq perl-indent-level 5)
+  (add-hook 'perl-mode-hook (lambda ()
+                              (lsp)
+                              (irony-mode -1)))
 #+END_SRC
 *** C*
 This use c-eldoc mode so it prints the function's prototype in the
@@ -345,11 +318,7 @@ Raku, the cornerstone of any well designed programming language.
        org-html-postamble nil
        org-html-use-infojs nil)
 #+end_src
-**** Org-agenda
->Le attention deficit destroyer
-#+begin_src emacs-lisp
-  (setq org-agenda-files (quote ("~/Documentos/agenda.org")))
-#+end_src
+
 ** Keybindings
 Here I put functions I won't bother to document because they're so
 simple.
@@ -514,8 +483,8 @@ I am tired of =M-x auto-fill-mode= in some modes
   (add-hook 'text-mode-hook 'auto-fill-mode)
   (add-hook 'sgml-mode-hook 'auto-fill-mode)
   (add-hook 'sgml-mode-hook 'zencoding-mode)
-  (add-hook 'Man-mode-hook 'no-lines)
-  (add-hook 'speedbar-mode-hook 'no-lines)
+  (add-hook 'Man-mode-hook 'qorg/no-lines)
+  (add-hook 'speedbar-mode-hook 'qorg/no-lines)
 #+end_src
 ** Hungry delete
 Having to delete multiple whitespaces is one of the things I hate,
@@ -546,15 +515,6 @@ thankfully there's this thing.
   (set-face-font 'org-level-2 "IBM Plex Mono 15")
   (set-face-font 'org-level-3 "IBM Plex Mono 14")
 
-#+end_src
-** diff-hl
-#+begin_src emacs-lisp
-  (use-package "diff-hl"
-       :ensure t
-       :config
-       (global-diff-hl-mode)
-       (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-       (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 #+end_src
 ** zzz-to-char
 It's like ace-whatever but for zapping characters.
@@ -669,10 +629,6 @@ Le ebin sidebar
        :hook (dired-mode . treemacs-icons-dired-enable-once)
        :ensure t)
 
-  (use-package treemacs-magit
-       :after (treemacs magit)
-       :ensure t)
-
   (use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
        :after (treemacs)
        :ensure t
@@ -684,6 +640,14 @@ Le ebin sidebar
   (use-package projectile
        :ensure t
        :init(projectile-mode))
+
+#+end_src
+** Nyancat
+Yes.
+#+begin_src emacs-lisp
+    (use-package nyan-mode
+         :ensure t
+         :init(nyan-mode))
 
 #+end_src
 
@@ -766,10 +730,6 @@ create it in case you accidentally killed the buffer)
        (setq doom-modeline-indent-info t)
        (setq doom-modeline-buffer-encoding t)
        :init (doom-modeline-mode 1))
-  ;; Don't ask why the font thing is here.
-  (set-face-attribute 'default nil :font "Tamsyn 14")
-  (set-frame-font "Tamsyn 14")
-  (set-frame-font "Tamsyn 14")
 #+end_src
 
 

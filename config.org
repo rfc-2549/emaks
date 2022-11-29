@@ -2,10 +2,13 @@
 
 * suragu's Emacs config
   
-This is my Emacs configuration. Hope you like it.
+This is my Emacs configuration, if you don't like it, that's ok
+because I made it thinking of myself. Hopefully, the code here is tidy
+so anyone could modify it without great pain.
 
 ** Installation
-Just copy this repository to your .emacs.d. Nothing else is needed.
+Just copy this repository to your emacs configuration path. Nothing
+else is needed.
 * Why?
 - I can
 - I don't like doom emacs
@@ -86,6 +89,7 @@ it. I don't think i'd ever use the overwritten.
   (global-set-key (kbd "M-m") 'mark-whole-buffer)
   (global-set-key (kbd "C-c m") 'man)
   (define-key org-mode-map (kbd "C-c p") 'org-publish-current-file)
+  (set-frame-font "Hack 17")
 #+END_SRC
   
 * No idea
@@ -109,27 +113,27 @@ it. I don't think i'd ever use the overwritten.
 * My functions
 Functions I wrote because emacs lisp is cool and useful.
 #+begin_src emacs-lisp
-  (defun qorg/goto-previous-buffer ()
+  (defun sosa/goto-previous-buffer ()
        "Switch to the previous buffer."
        (interactive)
        (switch-to-buffer (other-buffer)))
 
-  (defun kill-inner-word ()
+  (defun sosa/kill-inner-word ()
        "Unlike (kill-word) function, this function actually kill a world."
        (interactive)
        (forward-char 1)
        (backward-word)
        (kill-word 1))
-  (defun qorg/no-lines()
+  (defun sosa/no-lines()
        "Locally disable number line mode, useful hooks."
        (display-line-numbers-mode -1))
 
-  (defun qorg/git-pushall ()
+  (defun sosa/git-pushall ()
        "Call the git pushall shell command."
        (interactive)
        (shell-command "git pushall"))
 
-  (defun qorg/goto-dashboard ()
+  (defun sosa/goto-dashboard ()
        "Goes to the dashboard buffer"
        (interactive)
        (switch-to-buffer "*dashboard*")
@@ -137,30 +141,59 @@ Functions I wrote because emacs lisp is cool and useful.
        (dashboard-refresh-buffer))
 
   (setq org-publish-project-alist
-     '(("suragu.net"
-            :base-directory "~/docs/qorg_qorg/"
-            :publishing-directory "~/docs/mounts/sites/suragu.net"
-            :section-numbers nil
-            :publishing-function org-html-publish-to-html
-            :table-of-contents nil
-            :recursive t
-            )))
+       '(("suragu.net"
+              :base-directory "~/docs/qorg_qorg/"
+              :publishing-directory "~/docs/mounts/sites/suragu.net"
+              :section-numbers nil
+              :publishing-function org-html-publish-to-html
+              :table-of-contents nil
+              :recursive t
+              )))
 
-(defun make-website ()
-     (interactive)
-     (org-publish "suragu.net"))
+  (defun sosa/make-website ()
+       (interactive)
+       (org-publish "suragu.net"))
+
+  (defun run-current-file ()
+       "Execute or compile the current file.
+  For example, if the current buffer is the file x.pl,
+  then it'll call “perl x.pl” in a shell.
+  The file can be php, perl, python, bash, java.
+  File suffix is used to determine what program to run."
+       (interactive)
+       (let (ext-map file-name file-ext prog-name cmd-str)
+                                          ; get the file name
+                                          ; get the program name
+                                          ; run it
+            (setq ext-map
+                 '(
+                       ("php" . "php")
+                       ("pl" . "perl")
+                       ("py" . "python")
+                       ("p6" . "raku")
+                       ("raku" . "raku")
+                       ("sh" . "bash")
+                       ("java" . "javac")
+                       )
+                 )
+            (setq file-name (buffer-file-name))
+            (setq file-ext (file-name-extension file-name))
+            (setq prog-name (cdr (assoc file-ext ext-map)))
+            (setq cmd-str (concat prog-name " " file-name))
+            (shell-command cmd-str)))
+
 
 #+end_src
 * Programs
 Emacs customization, Here is where most of the configuration is.
 ** Pseudopersonalization
-The basic emacs persdonalization lol
+Sane defaults!!!
 #+BEGIN_SRC emacs-lisp
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (global-hl-line-mode)
-  (set-face-background hl-line-face "gray20")
+  (set-face-background hl-line-face "#434343")
   (setq-default cursor-type 'box)
   (blink-cursor-mode 1)
   (setq-default major-mode 'text-mode)
@@ -172,6 +205,7 @@ The basic emacs persdonalization lol
   (setq-default Man-notify-method 'pushy)
 #+END_SRC
 ** Highlight matching parentheses
+Useful for programming in lisp. I don't program in Lisp, but well.
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode 1)
   (setq show-paren-style 'mixed)
@@ -182,18 +216,21 @@ The basic emacs persdonalization lol
   (add-hook 'emacs-startup-hook 'startup/reset-gc)
 #+END_SRC
 ** Tramp mode shit
+(basically) no limit for remote files.
 #+begin_src emacs-lisp
   (set-variable 'tramp-copy-size-limit 122222222222)
   (set-variable 'tramp-inline-compress-start-size 12222222222222)
 #+end_src
 ** Lines and columns
+Show relative lines in each file. Also display the column in the
+minibuffer.
 #+BEGIN_SRC emacs-lisp
   (global-display-line-numbers-mode 1)
   (setq display-line-numbers-type 'relative)
   (column-number-mode 1)
 #+END_SRC
 ** Flycheck
-Flycheck is a syntax validator or somehting like that
+Flycheck is a syntax validator and lintern for programming.
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
        :ensure t
@@ -210,7 +247,9 @@ And for raku
 
 ** Terminal
 vterm is better than ansi-term and shit, despite it's kinda slow,
-it's a price i'm willing to pay.
+it's a price i'm willing to pay. Remember that to compile VTerm you
+need =cmake= installed. See the error buffer that is created everytime
+you try to copmile vterm for further information.
 
 It should use your default shell by default.
 #+BEGIN_SRC emacs-lisp
@@ -220,9 +259,9 @@ It should use your default shell by default.
 #+END_SRC
 ** Theme
 #+begin_src emacs-lisp
-(load-theme 'misterioso t)
+  (load-theme 'misterioso t)
 
-  (set-cursor-color "purple")
+  (set-cursor-color "cyan")
 #+end_src
 ** ctrlf
 So, you know, C-s in emacs sucks, so this is a repleacement for that.
@@ -268,14 +307,15 @@ them.
 I use LSP for perl.
 #+BEGIN_SRC emacs-lisp
   (setq perl-indent-level 5)
+  (defalias 'perl-mode 'cperl-mode)
   (add-hook 'perl-mode-hook (lambda ()
-                              (lsp)
-                              (irony-mode -1)))
+                                 (lsp)
+                                 (irony-mode -1)))
 #+END_SRC
 *** C*
 This use c-eldoc mode so it prints the function's prototype in the
 minibuffer. Which is very useful since Irony works when it wants
-to.
+to. LSP is also used for further Programming.
 #+BEGIN_SRC emacs-lisp
   (use-package c-eldoc
        :ensure t
@@ -290,7 +330,7 @@ to.
 Raku, the cornerstone of any well designed programming language.
 #+begin_src emacs-lisp
   (setq raku-indent-offset 5)
-  (setq raku-exec-path "/home/qorg/rakudo-star-2021.04/bin/raku") 
+  (setq raku-exec-path "/usr/bin/raku") 
 #+end_src
 *** HTML & CSS offset
 #+begin_src emacs-lisp
@@ -323,12 +363,12 @@ Raku, the cornerstone of any well designed programming language.
 Here I put functions I won't bother to document because they're so
 simple.
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-d") 'kill-inner-word)
+  (global-set-key (kbd "M-d") 'sosa/kill-inner-word)
   (global-set-key (kbd "M-.") 'repeat)
   (global-set-key (kbd "C-x k") 'kill-buffer)
   (global-set-key (kbd "C-x C-k") 'kill-current-buffer)
   (global-unset-key (kbd "C-x C-b"))
-  (global-set-key (kbd "C-x C-b") 'qorg/goto-previous-buffer)
+  (global-set-key (kbd "C-x C-b") 'sosa/goto-previous-buffer)
 #+END_SRC
 ** Hunspell
 For some reason, there is no ispell spanish in void linux. so i had
@@ -385,13 +425,6 @@ Scroll by lines rather than by pages.
   (setq auto-window-vscroll nil)
   (scroll-bar-mode 1)
 #+end_src
-** Sidebar
-#+BEGIN_SRC emacs-lisp
-  (use-package dired-sidebar
-       :ensure t
-       :commands (dired-sidebar-toggle-sidebar))
-  (global-set-key (kbd "<f7>") 'dired-sidebar-toggle-sidebar)
-#+END_SRC
 ** Shell
 #+begin_src emacs-lisp
   (add-hook 'shell-mode-hook 'yas-minor-mode)
@@ -430,7 +463,10 @@ I don't really know, it looks cool.
        (setq highlight-indent-guides-method 'bitmap))
 #+end_src
 ** Ace jump mode
-So you can jump to characters fast af
+Run, live to fly
+Fly to live, do or die
+Won't you run, live to fly
+Fly to live, aces high
 #+begin_src emacs-lisp
   (use-package "ace-jump-mode"
        :ensure t
@@ -453,7 +489,7 @@ And same but jumping between frames
        :init(global-unset-key (kbd "C-q"))
        (global-set-key (kbd"C-q") 'er/expand-region))
 
-  (defun qorg/mark-words-between-quotes ()
+  (defun sosa/mark-words-between-quotes ()
        "Does that."
        (interactive)
        (er/expand-region 2))
@@ -535,7 +571,7 @@ Better \*help\* buffer
 
 #+end_src
 ** Treemacs
-Le ebin sidebar
+Sidebar xdxd
 #+begin_src emacs-lisp
   (use-package treemacs
        :ensure t
@@ -590,7 +626,7 @@ Le ebin sidebar
                  treemacs-user-mode-line-format           nil
                  treemacs-user-header-line-format         nil
                  treemacs-wide-toggle-width               70
-                 treemacs-width                           35
+                 treemacs-width                           25
                  treemacs-width-increment                 1
                  treemacs-width-is-initially-locked       t
                  treemacs-workspace-switch-cleanup        nil)
@@ -636,6 +672,7 @@ Le ebin sidebar
 
 #+end_src
 ** Projectile
+Projectile is a project manager which helps you with git and stuff.
 #+begin_src emacs-lisp
   (use-package projectile
        :ensure t
@@ -645,40 +682,65 @@ Le ebin sidebar
 ** Nyancat
 Yes.
 #+begin_src emacs-lisp
-    (use-package nyan-mode
-         :ensure t
-         :init(nyan-mode))
+  (use-package nyan-mode
+       :ensure t
+       :init(nyan-mode))
 
 #+end_src
 
-* Helm
-fuck Ido lol
+* Vertico
+Better interactive selection minibuffer. Alternative to ido and helm.
 #+begin_src emacs-lisp
-  (use-package helm
-       :ensure t
-       :bind
-       ("C-x C-f" . 'helm-find-files)
-       ("M-x" . 'helm-M-x)
-       :config
-       (setq helm-autoresize-max-height 0
-            helm-autoresize-min-height 40
-            helm-M-x-fuzzy-match t
-            helm-buffers-fuzzy-matching t
-            helm-recentf-fuzzy-match t
-            helm-semantic-fuzzy-match t
-            helm-imenu-fuzzy-match t		
-            helm-split-window-in-side-p nil
-            helm-move-to-line-cycle-in-source nil
-            helm-ff-search-library-in-sexp t
-            helm-scroll-amount 8 
-            helm-echo-input-in-header-line t)
-       :init
-       (helm-mode 1))
 
-  (require 'helm-config)	 
-  (helm-autoresize-mode 1)
-  (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
-  (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
+  (use-package vertico
+       :ensure t
+       :init
+       (vertico-mode)
+
+       ;; Different scroll margin
+       ;; (setq vertico-scroll-margin 0)
+
+       ;; Show more candidates
+       ;; (setq vertico-count 20)
+
+       ;; Grow and shrink the Vertico minibuffer
+       ;; (setq vertico-resize t)
+
+       ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+       ;; (setq vertico-cycle t)
+       )
+
+  ;; Persist history over Emacs restarts. Vertico sorts by history position.
+  (use-package savehist
+       :init
+       (savehist-mode))
+
+  ;; A few more useful configurations...
+  (use-package emacs
+       :init
+       ;; Add prompt indicator to `completing-read-multiple'.
+       ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+       (defun crm-indicator (args)
+            (cons (format "[CRM%s] %s"
+                       (replace-regexp-in-string
+                            "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                            crm-separator)
+                       (car args))
+                 (cdr args)))
+       (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+       ;; Do not allow the cursor in the minibuffer prompt
+       (setq minibuffer-prompt-properties
+            '(read-only t cursor-intangible t face minibuffer-prompt))
+       (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+       ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+       ;; Vertico commands are hidden in normal buffers.
+       ;; (setq read-extended-command-predicate
+       ;;       #'command-completion-default-include-p)
+
+       ;; Enable recursive minibuffers
+       (setq enable-recursive-minibuffers t))
 #+end_src
   
 * CRUX
@@ -702,7 +764,7 @@ Here is an useful function I wrote so you can go to the dashboard (Or
 create it in case you accidentally killed the buffer)
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c C-d") 'qorg/goto-dashboard)
+  (global-set-key (kbd "C-c C-d") 'sosa/goto-dashboard)
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
@@ -713,7 +775,7 @@ create it in case you accidentally killed the buffer)
        (setq dashboard-items '(
                                    (recents	. 7)
                                    (bookmarks . 7)
-                                   (agenda . 7)))
+                                   ))
        (setq dashboard-startup-banner 'logo)
        (setq dashboard-banner-logo-title "Welcome to Editor MACroS")
        (setq dashboard-startup-banner "~/.emacs.d/img/banner.png")
@@ -725,11 +787,18 @@ create it in case you accidentally killed the buffer)
 #+begin_src emacs-lisp
   (use-package "doom-modeline"
        :ensure t
+       :init(doom-modeline-mode)
        :config
-       (setq doom-modeline-lsp t)
-       (setq doom-modeline-indent-info t)
-       (setq doom-modeline-buffer-encoding t)
-       :init (doom-modeline-mode 1))
+       (setq doom-modeline-height 25)
+       (setq doom-modeline-hud nil)
+       (setq doom-modeline-icon t)
+       (setq doom-modeline-major-mode-icon nil)
+       (setq doom-modeline-time-icon nil)
+       (setq doom-modeline-env-version t)
+       (setq doom-modeline-env-python-executable "python")
+       (setq doom-modeline-env-perl-executable "perl")
+       )
+
 #+end_src
 
 

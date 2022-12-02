@@ -3,7 +3,7 @@
 * suragu's Emacs config
   
 This is my Emacs configuration, if you don't like it, that's ok
-because I made it thinking of myself. Hopefully, the code here is tidy
+because I made it thinking of myself. the code here is tidy
 so anyone could modify it without great pain.
 
 ** Installation
@@ -151,6 +151,7 @@ Functions I wrote because emacs lisp is cool and useful.
               )))
 
   (defun sosa/make-website ()
+       "Publish the .org files of suragu.net to the sshfs mountpoint"
        (interactive)
        (org-publish "suragu.net"))
 
@@ -254,14 +255,22 @@ you try to copmile vterm for further information.
 It should use your default shell by default.
 #+BEGIN_SRC emacs-lisp
   (use-package "vterm"
+       :ensure t)
+#+END_SRC
+And to have multiple buffers
+
+#+BEGIN_SRC emacs-lisp
+  (use-package multi-vterm
        :ensure t
-       :bind("C-x C-t" . vterm))
+       :bind("C-x C-t" . multi-vterm))
 #+END_SRC
 ** Theme
 #+begin_src emacs-lisp
-  (load-theme 'misterioso t)
-
-  (set-cursor-color "cyan")
+  (use-package "exotica-theme"
+       :ensure t
+       :init(load-theme 'exotica t)
+       )
+  (set-cursor-color "purple")
 #+end_src
 ** ctrlf
 So, you know, C-s in emacs sucks, so this is a repleacement for that.
@@ -275,20 +284,6 @@ So, you know, C-s in emacs sucks, so this is a repleacement for that.
 ** Company and Irony
 Some shit for autocompletion and that kind of shit.
 
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-       :defer 1
-       :ensure t
-       :config
-       (setq company-idle-delay 0)
-       (setq company-minimum-prefix-length 1)
-       (global-company-mode))
-  (with-eval-after-load 'company
-       (define-key company-active-map (kbd "M-n") nil)
-       (define-key company-active-map (kbd "M-p") nil)
-       (define-key company-active-map (kbd "C-n") #'company-select-next)
-       (define-key company-active-map (kbd "C-p") #'company-select-previous))
-#+END_SRC
 ** Programming language things
 *** Lisp
 Parentheses highlight in lisp modes. So you can easily identify
@@ -346,7 +341,7 @@ Raku, the cornerstone of any well designed programming language.
   (setq org-export-with-smart-quotes t)
   (setq org-src-window-setup 'current-window)
   (add-hook 'org-mode-hook 'org-indent-mode)
-  (add-hook 'org-mode-hook 'qorg/no-lines) 
+  (add-hook 'org-mode-hook 'sosa/no-lines) 
   ;; Syntax highlighting in exports
   (use-package htmlize
        :ensure t)
@@ -494,7 +489,7 @@ And same but jumping between frames
        (interactive)
        (er/expand-region 2))
 
-  (global-set-key (kbd "C-c q") 'qorg/mark-words-between-quotes)
+  (global-set-key (kbd "C-c q") 'sosa/mark-words-between-quotes)
 #+end_src
 ** Beacon mode
 #+begin_src emacs-lisp
@@ -506,8 +501,7 @@ And same but jumping between frames
 Le language server
 #+begin_src emacs-lisp
   (use-package "lsp-mode"
-       :ensure t
-       )
+       :ensure t)
   (use-package "lsp-ui"
        :ensure t
        :init(add-hook 'lsp-mode-hook 'lsp-ui-mode))
@@ -519,8 +513,8 @@ I am tired of =M-x auto-fill-mode= in some modes
   (add-hook 'text-mode-hook 'auto-fill-mode)
   (add-hook 'sgml-mode-hook 'auto-fill-mode)
   (add-hook 'sgml-mode-hook 'zencoding-mode)
-  (add-hook 'Man-mode-hook 'qorg/no-lines)
-  (add-hook 'speedbar-mode-hook 'qorg/no-lines)
+  (add-hook 'Man-mode-hook 'sosa/no-lines)
+  (add-hook 'speedbar-mode-hook 'sosa/no-lines)
 #+end_src
 ** Hungry delete
 Having to delete multiple whitespaces is one of the things I hate,
@@ -679,6 +673,16 @@ Projectile is a project manager which helps you with git and stuff.
        :init(projectile-mode))
 
 #+end_src
+** Ack
+Ack is a replacement for =grep(1)= written in Perl, it's fast and
+stuff. And has support for Perl regular expressions. Because it is
+written in Perl.
+
+#+begin_src emacs-lisp
+  (use-package "ack"
+       :ensure t
+       )
+#+end_src
 ** Nyancat
 Yes.
 #+begin_src emacs-lisp
@@ -689,34 +693,40 @@ Yes.
 #+end_src
 
 * Vertico
-Better interactive selection minibuffer. Alternative to ido and helm.
+Better interactive selection minibuffer. Alternative to ido and
+helm. This also installs =marginalia-mode=. So you can have further
+information of the commands, files and stuff in the minibuffer.
 #+begin_src emacs-lisp
+  (use-package marginalia
+       :ensure t)
 
   (use-package vertico
+
        :ensure t
        :init
        (vertico-mode)
+       (marginalia-mode)
 
        ;; Different scroll margin
-       ;; (setq vertico-scroll-margin 0)
+       (setq vertico-scroll-margin 10)
 
        ;; Show more candidates
-       ;; (setq vertico-count 20)
+       (setq vertico-count 10)
 
        ;; Grow and shrink the Vertico minibuffer
-       ;; (setq vertico-resize t)
+       (setq vertico-resize nil)
 
        ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-       ;; (setq vertico-cycle t)
-       )
+       (setq vertico-cycle nil))
 
   ;; Persist history over Emacs restarts. Vertico sorts by history position.
   (use-package savehist
        :init
        (savehist-mode))
 
-  ;; A few more useful configurations...
+  ;; A few more useful configurations
   (use-package emacs
+       :ensure t
        :init
        ;; Add prompt indicator to `completing-read-multiple'.
        ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
@@ -741,6 +751,25 @@ Better interactive selection minibuffer. Alternative to ido and helm.
 
        ;; Enable recursive minibuffers
        (setq enable-recursive-minibuffers t))
+  (advice-add #'vertico--format-candidate :around
+       (lambda (orig cand prefix suffix index _start)
+            (setq cand (funcall orig cand prefix suffix index _start))
+            (concat
+                 (if (= vertico--index index)
+                      (propertize "-> " 'face 'vertico-current)
+                      "  ")
+                 cand)))
+  (defun vertico-resize--minibuffer ()
+       (add-hook 'window-size-change-functions
+            (lambda (win)
+                 (let ((height (window-height win)))
+                      (when (/= (1- height) vertico-count)
+                           (setq-local vertico-count (1- height))
+                           (vertico--exhibit))))
+            t t))
+
+  (advice-add #'vertico--setup :before #'vertico-resize--minibuffer)
+
 #+end_src
   
 * CRUX

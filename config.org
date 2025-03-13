@@ -73,6 +73,11 @@ C-c n for indent-buffer. I don't use the rest.
   (add-hook 'html-mode-hook
        (lambda ()
             (set-fill-column 100)))
+  (add-hook 'markdown-mode-hook
+       (lambda ()
+            (set-fill-column 75)))
+
+
   (defun indent-buffer ()
        (interactive)
        (save-excursion
@@ -89,7 +94,12 @@ it. I don't think i'd ever use the overwritten.
   (global-set-key (kbd "M-m") 'mark-whole-buffer)
   (global-set-key (kbd "C-c m") 'man)
   (define-key org-mode-map (kbd "C-c p") 'org-publish-current-file)
+<<<<<<< HEAD
+  (set-frame-font "Monospace 12")
+||||||| parent of 5575988 (no se ni que he hecho)
   (set-frame-font "Hack 17")
+=======
+>>>>>>> 5575988 (no se ni que he hecho)
 #+END_SRC
   
 * No idea
@@ -143,7 +153,7 @@ Functions I wrote because emacs lisp is cool and useful.
   (setq org-publish-project-alist
        '(("suragu.net"
               :base-directory "~/docs/qorg_qorg/"
-              :publishing-directory "~/docs/mounts/sites/suragu.net"
+              :publishing-directory "~/docs/mounts/suragu"
               :section-numbers nil
               :publishing-function org-html-publish-to-html
               :table-of-contents nil
@@ -183,7 +193,10 @@ Functions I wrote because emacs lisp is cool and useful.
             (setq cmd-str (concat prog-name " " file-name))
             (shell-command cmd-str)))
 
-
+  (defun sosa/repos ()
+       (interactive)
+       (dired "/home/diego/Escritorio/zpool/repos/"))
+  (global-set-key (kbd "C-c r") 'sosa/repos)
 #+end_src
 * Programs
 Emacs customization, Here is where most of the configuration is.
@@ -234,9 +247,7 @@ minibuffer.
 Flycheck is a syntax validator and lintern for programming.
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
-       :ensure t
-       :init
-       (add-hook 'after-init-hook #'global-flycheck-mode))
+       :ensure t)
 #+END_SRC
 And for raku
 #+BEGIN_SRC emacs-lisp
@@ -266,11 +277,26 @@ And to have multiple buffers
 #+END_SRC
 ** Theme
 #+begin_src emacs-lisp
+<<<<<<< HEAD
+  (use-package "base16-theme"
+||||||| parent of 5575988 (no se ni que he hecho)
   (use-package "exotica-theme"
+=======
+  (use-package "zweilight-theme"
+>>>>>>> 5575988 (no se ni que he hecho)
        :ensure t
+<<<<<<< HEAD
+       :init(load-theme 'base16-black-metal-bathory t)
+       )
+||||||| parent of 5575988 (no se ni que he hecho)
        :init(load-theme 'exotica t)
        )
+=======
+       :init(load-theme 'zweilight t))
+  (set-frame-font "Inconsolata 15")
+>>>>>>> 5575988 (no se ni que he hecho)
   (set-cursor-color "purple")
+
 #+end_src
 ** ctrlf
 So, you know, C-s in emacs sucks, so this is a repleacement for that.
@@ -281,8 +307,6 @@ So, you know, C-s in emacs sucks, so this is a repleacement for that.
        :init
        (ctrlf-mode +1))
 #+END_SRC
-** Company and Irony
-Some shit for autocompletion and that kind of shit.
 
 ** Programming language things
 *** Lisp
@@ -304,8 +328,17 @@ I use LSP for perl.
   (setq perl-indent-level 5)
   (defalias 'perl-mode 'cperl-mode)
   (add-hook 'perl-mode-hook (lambda ()
+<<<<<<< HEAD
                                  (lsp)
                                  (irony-mode -1)))
+  (load-file "~/.config/emacs/perltidy.el")
+||||||| parent of 5575988 (no se ni que he hecho)
+                                 (lsp)
+                                 (irony-mode -1)))
+=======
+                                 (lsp)))
+  (load-file "~/.config/emacs/perltidy.el")
+>>>>>>> 5575988 (no se ni que he hecho)
 #+END_SRC
 *** C*
 This use c-eldoc mode so it prints the function's prototype in the
@@ -318,14 +351,13 @@ to. LSP is also used for further Programming.
        (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode))
   (setq c-default-style "k&r")
   (add-hook 'c-mode-hook (lambda ()
-                              (lsp)
-                              (irony-mode -1)))
+                              (lsp)))
 #+END_SRC
 *** Raku
 Raku, the cornerstone of any well designed programming language.
 #+begin_src emacs-lisp
   (setq raku-indent-offset 5)
-  (setq raku-exec-path "/usr/bin/raku") 
+  (setq raku-exec-path "/home/diego/.local/bin/raku")
 #+end_src
 *** HTML & CSS offset
 #+begin_src emacs-lisp
@@ -404,6 +436,10 @@ Now let's make the thing lysergic
   (set-face-foreground dired-mark-face "green")
   (set-face-foreground dired-marked-face "blue")
 #+end_src
+Good sorting
+#+begin_src emacs-lisp
+(setq dired-listing-switches "-aBhl  --group-directories-first")
+#+end_src
 ** kill ring popup
 #+BEGIN_SRC emacs-lisp
   (use-package popup-kill-ring
@@ -418,7 +454,6 @@ Scroll by lines rather than by pages.
   (setq scroll-step 1)
   (setq scroll-conservatively 10000)
   (setq auto-window-vscroll nil)
-  (scroll-bar-mode 1)
 #+end_src
 ** Shell
 #+begin_src emacs-lisp
@@ -444,7 +479,7 @@ Multiple cursors :DD
 #+begin_src emacs-lisp
   (use-package "multiple-cursors"
        :ensure t
-       :bind ("C-c q" . 'mc/mark-next-like-this))
+       :bind ("C-x q" . 'mc/mark-next-like-this))
 
 #+end_src
 
@@ -502,9 +537,6 @@ Le language server
 #+begin_src emacs-lisp
   (use-package "lsp-mode"
        :ensure t)
-  (use-package "lsp-ui"
-       :ensure t
-       :init(add-hook 'lsp-mode-hook 'lsp-ui-mode))
 #+end_src
 ** Hooks
 I am tired of =M-x auto-fill-mode= in some modes
@@ -544,7 +576,9 @@ thankfully there's this thing.
   (set-face-font 'org-level-1 "IBM Plex Mono 16")
   (set-face-font 'org-level-2 "IBM Plex Mono 15")
   (set-face-font 'org-level-3 "IBM Plex Mono 14")
-
+  (set-face-font 'org-level-4 "IBM Plex Mono 14")
+  (set-face-font 'org-level-5 "IBM Plex Mono 14")
+  (setq org-hide-emphasis-markers t)
 #+end_src
 ** zzz-to-char
 It's like ace-whatever but for zapping characters.
@@ -564,107 +598,6 @@ Better \*help\* buffer
        :bind ("C-h k". #'helpful-key))
 
 #+end_src
-** Treemacs
-Sidebar xdxd
-#+begin_src emacs-lisp
-  (use-package treemacs
-       :ensure t
-       :defer t
-       :init
-       (with-eval-after-load 'winum
-            (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-       :config
-       (progn
-            (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
-                 treemacs-deferred-git-apply-delay        0.5
-                 treemacs-directory-name-transformer      #'identity
-                 treemacs-display-in-side-window          t
-                 treemacs-eldoc-display                   'simple
-                 treemacs-file-event-delay                5000
-                 treemacs-file-extension-regex            treemacs-last-period-regex-value
-                 treemacs-file-follow-delay               0.2
-                 treemacs-file-name-transformer           #'identity
-                 treemacs-follow-after-init               t
-                 treemacs-expand-after-init               t
-                 treemacs-find-workspace-method           'find-for-file-or-pick-first
-                 treemacs-git-command-pipe                ""
-                 treemacs-goto-tag-strategy               'refetch-index
-                 treemacs-indentation                     2
-                 treemacs-indentation-string              " "
-                 treemacs-is-never-other-window           nil
-                 treemacs-max-git-entries                 5000
-                 treemacs-missing-project-action          'ask
-                 treemacs-move-forward-on-expand          nil
-                 treemacs-no-png-images                   nil
-                 treemacs-no-delete-other-windows         t
-                 treemacs-project-follow-cleanup          nil
-                 treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-                 treemacs-position                        'left
-                 treemacs-read-string-input               'from-child-frame
-                 treemacs-recenter-distance               0.1
-                 treemacs-recenter-after-file-follow      nil
-                 treemacs-recenter-after-tag-follow       nil
-                 treemacs-recenter-after-project-jump     'always
-                 treemacs-recenter-after-project-expand   'on-distance
-                 treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
-                 treemacs-show-cursor                     nil
-                 treemacs-show-hidden-files               t
-                 treemacs-silent-filewatch                nil
-                 treemacs-silent-refresh                  nil
-                 treemacs-sorting                         'alphabetic-asc
-                 treemacs-select-when-already-in-treemacs 'move-back
-                 treemacs-space-between-root-nodes        t
-                 treemacs-tag-follow-cleanup              t
-                 treemacs-tag-follow-delay                1.5
-                 treemacs-text-scale                      nil
-                 treemacs-user-mode-line-format           nil
-                 treemacs-user-header-line-format         nil
-                 treemacs-wide-toggle-width               70
-                 treemacs-width                           25
-                 treemacs-width-increment                 1
-                 treemacs-width-is-initially-locked       t
-                 treemacs-workspace-switch-cleanup        nil)
-
-            ;; The default width and height of the icons is 22 pixels. If you are
-            ;; using a Hi-DPI display, uncomment this to double the icon size.
-            ;;(treemacs-resize-icons 44)
-
-            (treemacs-follow-mode t)
-            (treemacs-filewatch-mode t)
-            (treemacs-fringe-indicator-mode 'always)
-
-            (pcase (cons (not (null (executable-find "git")))
-                        (not (null treemacs-python-executable)))
-                 (`(t . t)
-                      (treemacs-git-mode 'deferred))
-                 (`(t . _)
-                      (treemacs-git-mode 'simple)))
-
-            (treemacs-hide-gitignored-files-mode nil))
-       :bind
-       (:map global-map
-            ("M-0"       . treemacs-select-window)
-            ("C-x t 1"   . treemacs-delete-other-windows)
-            ("C-x t t"   . treemacs)
-            ("C-x t d"   . treemacs-select-directory)
-            ("C-x t B"   . treemacs-bookmark)
-            ("C-x t C-t" . treemacs-find-file)
-            ("C-x t M-t" . treemacs-find-tag)))
-
-  (use-package treemacs-projectile
-       :after (treemacs projectile)
-       :ensure t)
-
-  (use-package treemacs-icons-dired
-       :hook (dired-mode . treemacs-icons-dired-enable-once)
-       :ensure t)
-
-  (use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
-       :after (treemacs)
-       :ensure t
-       :config (treemacs-set-scope-type 'Tabs))
-
-#+end_src
 ** Projectile
 Projectile is a project manager which helps you with git and stuff.
 #+begin_src emacs-lisp
@@ -680,8 +613,14 @@ written in Perl.
 
 #+begin_src emacs-lisp
   (use-package "ack"
-       :ensure t
-       )
+       :ensure t)
+#+end_src
+** whitespace-cleanup-mode
+Useful for makefiles.
+#+begin_src emacs-lisp
+(use-package "whitespace-cleanup-mode"
+	:ensure t
+	:init(add-hook 'after-init-hook 'whitespace-cleanup-mode))
 #+end_src
 ** Nyancat
 Yes.
@@ -691,7 +630,46 @@ Yes.
        :init(nyan-mode))
 
 #+end_src
+<<<<<<< HEAD
+** Orderless
+#+begin_src emacs-lisp
+  (use-package orderless
+    :ensure t
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+** web-mode
+#+begin_src emacs-lisp
+  (use-package web-mode
+       :ensure t
+       :config
+       (define-key web-mode-map (kbd "C-c C-e") 'web-mode-element-close)
+       (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+       (define-key web-mode-map (kbd "C-c C-o") 'web-mode-element-insert))
+#+end_src
+||||||| parent of 5575988 (no se ni que he hecho)
 
+=======
+** Orderless
+#+begin_src emacs-lisp
+  (use-package orderless
+    :ensure t
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+** web-mode
+#+begin_src emacs-lisp
+  (use-package web-mode
+       :ensure t
+       :config
+       (define-key web-mode-map (kbd "C-c C-e") 'web-mode-element-close)
+       (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+       (define-key web-mode-map (kbd "C-c C-o") 'web-mode-element-insert))
+#+end_src
+
+>>>>>>> 5575988 (no se ni que he hecho)
 * Vertico
 Better interactive selection minibuffer. Alternative to ido and
 helm. This also installs =marginalia-mode=. So you can have further
@@ -709,16 +687,12 @@ information of the commands, files and stuff in the minibuffer.
 
        ;; Different scroll margin
        (setq vertico-scroll-margin 10)
-
        ;; Show more candidates
        (setq vertico-count 10)
-
        ;; Grow and shrink the Vertico minibuffer
        (setq vertico-resize nil)
-
        ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
        (setq vertico-cycle nil))
-
   ;; Persist history over Emacs restarts. Vertico sorts by history position.
   (use-package savehist
        :init
@@ -825,8 +799,7 @@ create it in case you accidentally killed the buffer)
        (setq doom-modeline-time-icon nil)
        (setq doom-modeline-env-version t)
        (setq doom-modeline-env-python-executable "python")
-       (setq doom-modeline-env-perl-executable "perl")
-       )
+       (setq doom-modeline-env-perl-executable "perl"))
 
 #+end_src
 
